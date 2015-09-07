@@ -1,0 +1,168 @@
+/*
+Copyright (c) 2015 The Locals Project Authors. All rights reserved.
+See authors.md for a list of all members.
+*/
+
+
+  	//'use strict';
+
+  	/**
+	* Bind to Polymer
+	*/
+
+	var stage;
+	var userapp;
+
+	var conn;
+
+	var server = "ws://www.opantwerpen.be:7070/ws/server";
+
+    var domein = "opantwerpen.be";
+
+  	window.addEventListener('WebComponentsReady', function() {
+      // imports are loaded and elements have been registered
+      stage = document.getElementById("pages");
+      userapp = document.querySelector("labs002-stage");
+    });
+
+
+	/**
+	* Sending of messages
+	* to: the device address
+	*	command: as a string. SYNC / SHARE / USERUPDATE / VERIFY / VALIDATE / DATAUPDATE
+	*	objectname: as a string. (the object's key)
+	* objectconfig: the "meta" data or configuration (not encrypted)
+	*	objectdata: the encrypted data object that's verified
+	*/
+
+  	function sendMessage(partner, command, objectname, objectconfig, objectdata){
+  		console.log(partner+'//'+command+'//'+objectname+'//'+objectconfig+'//'+objectdata);
+      var message = command+'//'+objectname+'//'+objectconfig+'//'+objectdata;
+      var msg = $msg({
+        to: partner+'@'+domein
+      }).cnode(Strophe.xmlElement('body', message)).up()
+      .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+      conn.send(msg);
+  	};
+
+
+  	/**
+  	* Receiving of messages
+  	*/
+
+  	function receiveMessage(msg){
+      var that = this;
+      var to = msg.getAttribute('to');
+      var from = msg.getAttribute('from');
+      var type = msg.getAttribute('type');
+      var elems = msg.getElementsByTagName('body');
+      var body = elems[0];
+      if(body!=null){
+
+        var bodymsg = Strophe.getText(body);
+        bodymsg = Strophe.xmlunescape(bodymsg);
+
+        var commandarray = bodymsg.split("//");
+
+        var partner = commandarray[0];
+        var command = commandarray[1];
+        var objectname = commandarray[2];
+        var objectconfig = commandarray[3];
+        var objectdata = commandarray[4];
+
+        processCommand(partner, command, objectname, objectconfig, objectdata);
+    
+      };
+      return true;
+   	};
+
+   	function processCommand(partner, command, objectname, objectconfig, objectdata){
+   		switch(command){
+   			case "SYNC":
+   				// Another device wants to sync with this device. This device should say yes or no.
+   				console.log("Een ander toestel wil al jouw gegevens synchroniseren. Is dat ok?");
+   			break;
+   			case "USERUPDATE":
+   				// I am a sync/peer for this user so I keep myself up to date.
+   				// Overwrite the local userobject with the one received.
+   				console.log("Volledige data wordt gesynct.");
+   				app.localenc = objectdata;
+   				app.localapi.lastupdate = Date.now();
+   				window.location = "/";
+   			break;
+   			case "VERIFY":
+   				// Another user wants a dataset verified by this user
+   				console.log("Iemand wil een dataset laten valideren.");
+   				//app.openDialog("Wil je deze dataset van Kristien valideren?");
+   			break;
+   			case "VALIDATE":
+   				// Validate the dataset on this device by adding the sender as a peer
+   				console.log("Er komt een nieuwe getuige bij.");
+   				//app.localapi.collection[objectname].peers.push(partner);
+   				//app.localapi.lastupdate = Date.now();
+   			break;
+   			case "DATAUPDATE":
+   				// The incoming dataset has been updated. This device should update the objectconfig and check wether the objectdata has been changed. When changed, the the verification should be cancelled.
+   				//app.localapi.collection[objectname].peers[partner] = objectconfig;
+   				console.log("Een van jouw mignons heeft een dataset veranderd.");
+   				//if(app.localapi.collection[objectname].data === objectdata);
+
+   				//app.localapi.lastupdate = Date.now();
+   			break;
+   		};
+   	};
+
+   	function loginOpenfire(username, password, fn){
+   		console.log('starting login openfire for user ', username, ' with pass ', password);
+
+      	conn = new Openfire.Connection(server, function(e){
+        	console.log(e);
+      	});
+
+      	var that = this;
+
+      	conn.connect(username, password, function(status){
+        	if (status === Strophe.Status.CONNECTED) {
+          		// Als em goed is ingelogd doe dit
+          		console.log('--- Connected to OpenFire');
+          		fn();
+          		//that.joinRoom(username, password, "astadlabs");
+          		conn.addHandler(receiveMessage);
+          		conn.send($pres().tree());
+          		that.fire('logged-in');
+          		that.connected = true;
+          		//that.selected = 1;
+		        // Read data from localstorage
+		        //that.$.localapielem.readData();
+		        //showDialog("Getuige worden", "Wil je getuige worden van Michael?"); 
+        	} else if (status === Strophe.Status.DISCONNECTED) {
+        		// Als er iets fout ging met login doe dit
+          		that.fire('disconnected');
+          		//that.selected = 0;
+          		//that.error = "error!";
+          		window.location = '/';
+          		//that.connected = false;
+        	};
+      	});
+   	};
+
+
+
+// case "addgetuige":
+//             //alert(commandarray[0]+' wil dat je zijn getuige wordt voor dataset '+commandarray[1]);
+//             var data = Strophe.xmlunescape(commandarray[3]);
+//             //var data = commandarray[3];
+//             //data = data.replace('&quot;', '"');
+//             console.log(data);
+//             var ewdata = JSON.parse(data);
+//             console.log('ewdata ',ewdata);
+//             var titel = "Getuige worden";
+//             //var tekst = from+" wil graag dat je getuige wordt van het "+commandarray[1]+" "+commandarray[2]+' Data: ',data;
+//             var tekst = ewdata;
+//             var user = from;
+
+//             changeStage(5, titel, tekst, user);
+//             //partner = commandarray[1];
+//             //console.log('partner: ', partner);
+//             //openDialog("Backup maken", "Wil je een backup maken op toestel "+commandarray[1]+"?"); 
+//             break;

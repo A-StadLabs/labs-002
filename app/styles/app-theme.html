@@ -1,0 +1,220 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<style is="custom-style">
+
+  /*
+   Polymer includes a shim for CSS Custom Properties that we can use for application theming.
+   Below, you'll find the default palette for the Polymer Starter Kit layout. Feel free to play
+   with changing the colors used or generate your own palette of colours at MaterialPalette.com.
+
+   See https://www.polymer-project.org/1.0/docs/devguide/styling.html#xscope-styling-details
+   for further information on custom CSS properties.
+   */
+
+  /* Application theme */
+
+
+
+
+/* GENERAL  */
+
+@font-face {
+    font-family: OpensansLight;
+    src: url(../fonts/OpenSans-Light.ttf);
+}
+
+@font-face {
+    font-family: Opensans;
+    src: url(../fonts/OpenSans-Regular.ttf);
+}
+
+@font-face {
+    font-family: OpensansBold;
+    src: url(../fonts/OpenSans-ExtraBoldItalic.ttf);
+}
+ 
+
+
+  .paper-font-display4,
+.paper-font-display3,
+.paper-font-display2,
+.paper-font-display1,
+.paper-font-headline,
+.paper-font-title,
+.paper-font-subhead,
+.paper-font-body2,
+.paper-font-body1,
+.paper-font-caption,
+.paper-font-menu,
+.paper-font-button {
+  font-family: Opensans;
+}
+
+
+
+  :root {
+    --primary-green: #78B47A;
+    --primary-red: #C95B50;
+    --primary-yellow: #ECAD5F;
+    --primary-purple: #965096;
+    --primary-darkblue: #006A86;
+    --primary-blue: #219DC8;
+    --primary-lightblue: #1EC3F8;
+
+
+
+    --light-grijs: #F0F0F0;
+
+    font-family: Opensans;
+    -webkit-font-smoothing: antialiased;
+  }
+
+
+
+
+
+
+
+
+
+
+/* ALL BACKGROUNDS */
+
+  .greenback {
+    background-color: var(--primary-green);
+    color: white;
+  }
+
+
+
+/* GENERAL TYPO  */
+
+    h1,h2 {
+      font-family: OpensansLight;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      line-height: 125%;
+    }
+
+    h3 {
+      font-family: OpensansLight;
+            font-weight: 300;
+
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      line-height: 125%;
+    }
+
+
+
+
+
+
+
+/* ALL MATTERS DRAWER */
+
+
+/*
+  .drawerbtn {
+    cursor: pointer;
+  }
+
+  paper-drawer-panel {
+    height: 100%;
+  }
+
+  .drawer {
+    @apply(--layout-vertical);
+    padding: 30px;
+    box-sizing: border-box;
+  }
+
+  .drawer-iconsbox {
+    display: inline-block;
+        width: 50px;
+
+    margin: 2px 30px 0px 0px;
+  }
+
+
+
+
+  .drawer-icons {
+    width: 50px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 25px;
+  }
+
+
+
+
+  p {
+    font-size: 14px;
+    margin: 0px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 140%;
+
+    }
+
+  .drawerpart {
+  margin: 10px 0px 10px 0px;
+  }
+
+
+*/
+ 
+
+
+
+
+
+  /* Material Design Adaptive Breakpoints */
+  /*
+    Below you'll find CSS media queries based on the breakpoint guidance
+    published by the Material Design team. You can choose to use, customise
+    or remove these breakpoints based on your needs.
+
+    http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
+   */
+
+  /* mobile-small */
+  @media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }
+  /* mobile-large */
+  @media all and (min-width: 361px) and (orientation: portrait) { }
+  /* mobile-small-landscape */
+  @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+  /* mobile-large-landscape */
+  @media all and (min-width: 481px) and (orientation: landscape) { }
+  /* tablet-small-landscape */
+  @media all and (min-width: 600px) and (max-width: 960px) and (orientation: landscape) { }
+  /* tablet-large-landscape */
+  @media all and (min-width: 961px) and (orientation: landscape) { }
+  /* tablet-small */
+  @media all and (min-width: 600px) and (orientation: portrait) { }
+  /* tablet-large */
+  @media all and (min-width: 601px) and (max-width: 840px) and (orientation : portrait) { }
+  /* desktop-x-small-landscape */
+  @media all and (min-width: 0) and (max-width: 480px) and (orientation: landscape) { }
+  /* desktop-x-small */
+  @media all and (min-width: 0) and (max-width: 480px) and (max-aspect-ratio: 4/3) { }
+  /* desktop-small-landscape */
+  @media all and (min-width: 481px) and (max-width: 840px) and (orientation: landscape) { }
+  /* desktop-small */
+  @media all and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4/3) { }
+  /* desktop-medium-landscape */
+  @media all and (min-width: 841px) and (max-width: 1280px) and (orientation: landscape) { }
+  /* desktop-medium */
+  @media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
+  /* desktop-large */
+  @media all and (min-width: 1281px) and (max-width: 1600px) { }
+  /* desktop-xlarge */
+  @media all and (min-width: 1601px) and (max-width: 1920px) { }
+</style>

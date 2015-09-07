@@ -1,0 +1,590 @@
+<!-- A-StadLabs 2015 -->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script src="../../bower_components/strophe.js/strophe.js"></script>
+<script src="../../bower_components/strophejs-plugins/muc/strophe.muc.js"></script>
+<script src="../../bower_components/strophe-openfire-websocket/strophe-openfire-websocket.js"></script>
+
+<dom-module id="labs002-stage">
+<style>
+  :host {
+    display: block;
+    @apply(--layout-fit);
+    --page-color:  var(--primary-blue);
+  }
+
+  .canvas {
+    background-color: var(--page-color);
+    color: white; 
+    height: 100%;
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+    text-align: center;
+  }
+
+  .color {
+    background-color: var(--page-color);
+  }
+
+  neon-animated-pages {
+    height: 100%;
+  }
+
+
+
+  labs002-objectscollection {
+    height: 100%;
+    
+  }
+
+
+
+</style>
+<template>
+
+    <iron-localstorage id="localstorage" name="labs002-user" value="{{encruserid}}">
+  </iron-localstorage>
+
+   <iron-localstorage id="openfire1" name="labs002-openfire1" 
+       value="{{openfire1}}">
+        </iron-localstorage>
+        <iron-localstorage on-iron-localstorage-load="login"  id="openfire2" name="labs002-openfire2" value="{{openfire2}}">
+
+  <labs002-localstorageapi id="localapielem" userid="{{userid}}" pincode="{{pin1}}" data="{{localapi}}" encdata="{{localenc}}"></labs002-localstorageapi>
+
+
+  <neon-animated-pages id="pages" selected="{{selected}}"  class="color" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+
+  <!-- Stage 0: Pincode ingeven (bestaande gebruiker) -->
+  <dp-pin on-yes="toggleDrawer" on-pin-entered="decryptUser" pin="{{pin1}}" titel="Geef je pincode in." error="{{error}}">
+  </dp-pin>
+
+  <!-- Stage 1: Alle datasets renderen -->
+  <labs002-objectscollection id="objectcoll" userid="{{userid}}" on-open-camera="_qrreader" objectsdata="{{localapi}}" class="color" loggidin="{{loggidin}}"></labs002-objectscollection>
+
+  <!-- Stage 2: Voorbeeld van een eerste dataset -->
+  <labs002-renderer dataset="{{emptyProfile}}" on-save="saveDataset"></labs002-renderer>
+
+<!-- Stage 3: QR code lezer -->
+<neon-animatable>
+<div class="canvas">
+  <labs002-qrreader></labs002-qrreader>
+</div>
+</neon-animatable>
+
+<!-- Stage 4: QR code / Identificatie weergeven -->
+<neon-animatable>
+<div class="canvas">
+  <button on-click="_toWhere">back</button>
+  <alabs-qrcode code="{{openfire1}}"></alabs-qrcode>
+</div>
+</neon-animatable>
+
+<!-- Stage 5: Bevestig getuige (of iets anders) worden
+Op termijn komt hier uw Queueueueeue met todo's -->
+<neon-animatable>
+<div class="canvas">
+  <h2>{{titel}}</h2>
+  <div>{{tekst}}</div>
+  <button on-click="_ConfirmGetuige">JA!</button>
+  <button on-click="_CancelGetuige">NEEN!</button>
+</div>
+</neon-animatable>
+
+</neon-animated-pages>
+
+<paper-dialog id="dialog" modal>
+  <h2>{{dialogtitle}}</h2>
+  <paper-dialog-scrollable>
+    <span>{{dialogbody}}</span>
+  </paper-dialog-scrollable>
+  <div class="buttons">
+    <paper-button dialog-dismiss>Annuleren</paper-button>
+    <paper-button dialog-confirm on-click="senduserobject">Accepteren</paper-button>
+  </div>
+</paper-dialog>
+
+</template>
+</dom-module>
+<script>
+  (function() {
+
+    var conn; 
+
+    var pageselected = 0;
+
+    var stage;
+    var app;
+
+    var partner;
+
+    var server = "ws://www.opantwerpen.be:7070/ws/server";
+
+    var domein = "opantwerpen.be";
+
+    var openDialog = function(titel, body){
+      app.dialogtitle = titel;
+      app.dialogbody = body;
+      app.$.dialog.open();
+    };
+
+    var saveEncuserobject = function(e){
+    console.log(e);
+    app.localenc = e;
+   };
+
+    window.addEventListener('WebComponentsReady', function() {
+      // imports are loaded and elements have been registered
+      stage = document.getElementById("pages");
+      app = document.querySelector("labs002-stage");
+    });
+
+    var changeStage = function(e, titel, tekst){
+      stage.selected = e;
+      //app.log('iets vanuit vanilla naar polymer');
+      app.titel = titel;
+      app.tekst = tekst;
+    };
+
+    var syncwithme = function(e, user){
+      stage.selected = 5;
+      app.log('iets vanuit vanilla naar polymer');
+      app.getuige = user;
+    };
+
+    function htmlspecialchars_decode(string, quote_style) {
+  //       discuss at: http://phpjs.org/functions/htmlspecialchars_decode/
+  //      original by: Mirek Slugen
+  //      improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //      bugfixed by: Mateusz "loonquawl" Zalega
+  //      bugfixed by: Onno Marsman
+  //      bugfixed by: Brett Zamir (http://brett-zamir.me)
+  //      bugfixed by: Brett Zamir (http://brett-zamir.me)
+  //         input by: ReverseSyntax
+  //         input by: Slawomir Kaniecki
+  //         input by: Scott Cariss
+  //         input by: Francois
+  //         input by: Ratheous
+  //         input by: Mailfaker (http://www.weedem.fr/)
+  //       revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // reimplemented by: Brett Zamir (http://brett-zamir.me)
+  //        example 1: htmlspecialchars_decode("<p>this -&gt; &quot;</p>", 'ENT_NOQUOTES');
+  //        returns 1: '<p>this -> &quot;</p>'
+  //        example 2: htmlspecialchars_decode("&amp;quot;");
+  //        returns 2: '&quot;'
+
+  var optTemp = 0,
+    i = 0,
+    noquotes = false;
+  if (typeof quote_style === 'undefined') {
+    quote_style = 2;
+  }
+  string = string.toString()
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+  var OPTS = {
+    'ENT_NOQUOTES': 0,
+    'ENT_HTML_QUOTE_SINGLE': 1,
+    'ENT_HTML_QUOTE_DOUBLE': 2,
+    'ENT_COMPAT': 2,
+    'ENT_QUOTES': 3,
+    'ENT_IGNORE': 4
+  };
+  if (quote_style === 0) {
+    noquotes = true;
+  }
+  if (typeof quote_style !== 'number') { // Allow for a single string or an array of string flags
+    quote_style = [].concat(quote_style);
+    for (i = 0; i < quote_style.length; i++) {
+      // Resolve string input to bitwise e.g. 'PATHINFO_EXTENSION' becomes 4
+      if (OPTS[quote_style[i]] === 0) {
+        noquotes = true;
+      } else if (OPTS[quote_style[i]]) {
+        optTemp = optTemp | OPTS[quote_style[i]];
+      }
+    }
+    quote_style = optTemp;
+  }
+  if (quote_style & OPTS.ENT_HTML_QUOTE_SINGLE) {
+    string = string.replace(/&#0*39;/g, "'"); // PHP doesn't currently escape if more than one 0, but it should
+    // string = string.replace(/&apos;|&#x0*27;/g, "'"); // This would also be useful here, but not a part of PHP
+  }
+  if (!noquotes) {
+    string = string.replace(/&quot;/g, '"');
+  }
+  // Put this in last place to avoid escape being double-decoded
+  string = string.replace(/&amp;/g, '&');
+
+  return string;
+}
+
+    Polymer({
+      is: 'labs002-stage',
+
+      properties: {
+
+        selected: {
+          type: Number,
+          observer: "_selectedChanged"
+        }
+
+        // emptyProfile: {
+        //   type: Object,
+        //   value: { collection: [{
+        //     datasetName: "basisprofiel",
+        //     datasetTypes: ["titel", "string", "string"],
+        //     datasetLabels: ["Basisinfo", "voornaam", "naam"],
+        //     datasetWaarden: ["null", "Michael", "Thuy"]
+        //     },
+        //     {
+        //     datasetName: "huis",
+        //     datasetTypes: ["titel", "string", "string"],
+        //     datasetLabels: ["Huis", "straat", "postcode"],
+        //     datasetWaarden: ["null", "Gloriantlaan 39", "2050"]
+        //     }]}
+        //   }
+
+      },
+
+      _addDataset: function(){
+        var defaultavatar = { avatar: [
+                      { avatarSnit: [2, "red"] },
+                      { avatarGlasses: [1, "red"] },
+                      { avatarBeard: [1, "red"] },
+                      { avatarFace: [0, "red"] },
+                      { avatarHead: [0, "red"] },
+                      { avatarTop: [1, "red"] },
+                      { avatarBottom: [1, "red"] },
+                      { avatarShoes: [1, "red"] },
+                      { avatarBody: [1, "red"] }
+          ]};
+        //console.log('iets?', this.localapi.collection.length);
+        var datasetnaam = "basisprofiel";
+        var dataset = {
+            datasetName: "basisprofiel",
+            datasetTypes: ["titel", "string", "string", "string", "string", "object"],
+            datasetLabels: ["Basisprofiel", "voornaam", "naam", "straatnr", "postcode", "avatarObject"],
+            datasetPeers: [],
+            datasetWaarden: ["null", "", "", "", "",defaultavatar],
+            datasetWebcomponent: 'labs002-avatar'
+            };
+          //var nummer = this.localapi.collection.length;
+        //var localdata=this.localapi;
+            //console.log('localapi currentlength: ',localapi);
+        this.localapi.collection.push(dataset);
+        this.$.localapielem.writeData();
+      },
+
+      /**
+     * Ready function to declare some variables and setup event listeners.
+     */
+
+      ready: function(){
+        //Dit staat hier voor de gemakkelijkheid
+        this.pin1 = "1234";
+
+        this.loggidin = false;
+        this.selected = pageselected;
+        this.entryAnimation = 'slide-from-right-animation';
+        this.exitAnimation = 'slide-left-animation';
+        var that = this;
+        
+        this.addEventListener('send-message', function(e){
+          console.log('event listener om een message te sturen', e);
+          that.sendMessage(e.detail.command, e.detail.towho);
+        });
+        
+        this.addEventListener('change-stage', function(e){
+          console.log('Changing stage', e.stage);
+          that.selected = e.stage;
+        });
+        
+        this.addEventListener('change-stage', function(e){
+          console.log('Changing stage', e.stage);
+          that.selected = e.stage;
+        });
+
+        this.addEventListener('add-avatar', function(){
+          that._addDataset();
+        });
+        
+        this.addEventListener('save', function(e){
+          console.log('Saving whole dataset', e.detail.dataset);
+          that.localapi = e.detail.dataset;
+          that.$.localapielem.writeData();
+          // En zet de nieuwe versie ook op mijn eigen peer toestellen
+          // for (var i = that.localapi.peers.length - 1; i >= 0; i--) {
+          //   console.log(that.localapi.peers[i]);
+          //   var partner = that.localapi.peers[i];
+          //   console.log('send user object to: ', partner, ' This value: ', that.localenc);
+          //   that.sendMessage(partner, "userupdate",that.localenc, that.encruserid);
+          // };
+        });
+
+        this.addEventListener('qr-identity', function(e){
+          that._toQR();
+        });
+
+        this.addEventListener('qr-reader', function(e){
+          that._qrreader(e);
+        });
+
+        this.addEventListener('background-activ', function(){
+          this.customStyle['--page-color'] = 'blue';
+          this.updateStyles();
+        });
+        
+      },
+
+            /**
+     * Dees functie wordt aangesproken wanneer er een message binnenkomt. 
+     */
+
+    incoming: function(msg){
+      var that = this;
+      var userid = this.userid;
+      console.log('--- Incoming message ', msg);
+      var to = msg.getAttribute('to');
+      var from = msg.getAttribute('from');
+      var type = msg.getAttribute('type');
+      var elems = msg.getElementsByTagName('body');
+      var body = elems[0];
+      if(body!=null){
+        var bodymsg = Strophe.getText(body);
+        bodymsg = Strophe.xmlunescape(bodymsg);
+        console.log('--- ',bodymsg);
+        // HTML escape body eerst
+        //var commandarray = bodymsg.replace(/<(?:.|\n)*?>/gm, '');
+        //console.log(commandarray);
+        var commandarray = bodymsg.split("//");
+        //console.log('command: ',commandarray[0],'fromWho: ',commandarray[1]);
+        // En hier moet ne switch komen die functies gaat uitvoeren naargelang commando dat in de message zit.
+        switch(commandarray[0]){
+          case "heresuserobject":
+            console.log('received userobject: ', commandarray[1], 'received localuser ', commandarray[2]);
+            saveEncuserobject(commandarray[1], commandarray[2]);
+            break;
+          case "userupdate":
+            console.log('received userobject: ', commandarray[1], 'received localuser ', commandarray[2]);
+            saveEncuserobject(commandarray[1], commandarray[2]);
+            break;
+          case "syncwithme":
+            partner = commandarray[1];
+            console.log('partner: ', partner);
+            openDialog("Backup maken", "Wil je een backup maken op toestel "+commandarray[1]+"?"); 
+            break;
+          case "addgetuige":
+            //alert(commandarray[0]+' wil dat je zijn getuige wordt voor dataset '+commandarray[1]);
+            var data = commandarray[3];
+            //data = data.replace('&quot;', '"');
+            console.log(data);
+            var ewdata = JSON.parse(data);
+            console.log('ewdata ',ewdata);
+            var titel = "Getuige worden";
+            //var tekst = from+" wil graag dat je getuige wordt van het "+commandarray[1]+" "+commandarray[2]+' Data: ',data;
+            var tekst = ewdata;
+
+            changeStage(5, titel, tekst);
+            //partner = commandarray[1];
+            //console.log('partner: ', partner);
+            //openDialog("Backup maken", "Wil je een backup maken op toestel "+commandarray[1]+"?"); 
+            break;
+        };
+        
+      };
+      return true;
+    },
+
+    /**
+    * Dees functie wordt gebruikt om een chat message te versturen. */
+
+    sendMessage: function(towho, command, value, data){
+      console.log('preparing to send message');
+      var from = this.userid+'@'+domein;
+      console.log('from: '+from);
+      //var to = towho+'@kingflurkel.dtdns.net';
+      var to = towho;
+      console.log('to: ', to);
+      var themessage = command+'//'+value+'//'+from+'//'+data;
+      console.log('message: ', themessage);
+      var msg = $msg({
+        to: to
+      }).cnode(Strophe.xmlElement('body', themessage)).up()
+      .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+      conn.send(msg);
+    },
+
+
+    /** * Dees functie opent de qr reader en wacht tot em iets terug krijgt. */
+
+    _qrreader: function(e){
+      this.importHref("../elements/labs002-qrreader/labs002-qrreader.html", function(g) {
+        this.addEventListener("got-code", function(f){
+          //Hier doet em shit als em een code terug krijgt. 
+          //this.$.objectcoll.callback(e.detail);
+          console.log('Got Code.', f.detail.detail);
+          console.log('Volledig: ',e);
+          console.log('Action to perform: ', e.detail.command);
+          console.log('Dataset: ', e.detail.dataset);
+          console.log('Data: ', e.detail.data);
+          var partner = f.detail.detail+"@"+domein;
+          var command = e.detail.command;
+          var dataset = e.detail.dataset;
+          var data = e.detail.data;
+          console.log(data);
+          this.sendMessage(partner, e.detail.command, dataset, data);
+        });
+      // e.target.import is the import document.
+      //console.log('import',e);
+    }, function(g) {
+      //console.log('import',e);
+      // loading error
+    });
+      this.selected = 3;
+    },
+
+    /** * Userobject decrypteren met ingegeven pin code */
+    decryptUser: function(){
+      var decrypted = CryptoJS.AES.decrypt(this.encruserid, this.pin1);
+      var decrtostring = decrypted.toString(CryptoJS.enc.Utf8);
+      this.userid = decrtostring;
+      this.login(this.openfire1, this.openfire2);
+      this.loggidin = true;
+    },
+
+    /** * Wordt nog niet gebruikt, maar deze functie doet JOIN in chatroom. */
+    joinRoom: function(username, password, room){
+      var that = this;
+      this.room = room;
+      //console.log('--- User joins room "astadlabs"');
+      var room = this.room+"@conference.kingflurkel.dtdns.net";
+      var nick = username+"@kingflurkel.dtdns.net";
+      var password = password;
+      var history_attrs = null;
+      conn.muc.join(room, nick, that.msg_handler_cb, that.pres_handler_cb, that.roster_cb, password, history_attrs);
+    },
+
+    /** * User wordt ingelogd op de chatserver */
+    login: function(username, password){
+      conn = new Openfire.Connection(server, function(e){
+        console.log(e);
+      });
+
+      var that = this;
+
+      conn.connect(username, password, function(status){
+        if (status === Strophe.Status.CONNECTED) {
+          // Als em goed is ingelogd doe dit
+          console.log('--- Connected to OpenFire');
+          //that.joinRoom(username, password, "astadlabs");
+          conn.addHandler(that.incoming);
+          conn.send($pres().tree());
+          that.fire('logged-in');
+          that.connected = true;
+          that.selected = 1;
+          // Read data from localstorage
+          that.$.localapielem.readData();
+        } else if (status === Strophe.Status.DISCONNECTED) {
+          // Als er iets fout ging met login doe dit
+          that.fire('disconnected');
+          that.selected = 0;
+          that.error = "error!";
+          window.location = '/';
+          that.connected = false;
+        };
+      });
+    },
+
+    senduserobject: function(){
+      console.log('send user object to: ', partner, ' This value: ', this.localenc);
+      this.localapi.peers.push(this.openfire1+'@'+domein);
+      this.localapi.peers.push(partner);
+      this.$.localapielem.writeData();
+      this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
+    },
+
+    // Niet gebruikt for now
+    msg_handler_cb: function(msg){
+      var to = msg.getAttribute('to');
+      var from = msg.getAttribute('from');
+      var type = msg.getAttribute('type');
+      var elems = msg.getElementsByTagName('body');
+      var body = elems[0];
+
+      if(body=="alert"){
+        alert('alert ontvangen');
+        console.log('alert ontvangen');
+      };
+      return true;
+    },
+
+    // Niet gebruikt for now
+    pres_handler_cb: function(){
+      //console.log('--- Set presence handler');
+      return true;
+    },
+
+    // Niet gebruikt for now
+    roster_cb: function(){
+      //console.log('--- Set roster handler');
+      return true;
+    },
+
+    // Navigational stuff
+    _toQR:function(){
+      this.selected = 4;
+    },
+
+    _toWhere:function(){
+      this.selected = 1;
+    },
+
+    _toScanner: function(){
+      this.selected = 3;
+    },
+
+    _ConfirmGetuige: function() {
+      console.log('Yes, bevestigd!');
+    },
+
+    _CancelGetuige: function() {
+      console.log('Neen, annuleren!');
+    },
+
+    // Variable listeners
+
+    _selectedChanged: function(){
+      // console.log('page selected: ', this.selected);
+      switch (this.selected) {
+        case 0:
+        this.color1 = 'var(--primary-red)';
+        break;
+
+        case 1:
+        this.color1 = '#a4e5f9';
+        break;
+
+        case 2:
+        this.color1 = 'white';
+        break;
+        case 3:
+        this.color1 = 'grey';
+        break;
+
+        case 4:
+        this.color1 = 'white';
+        break;
+
+        case 5:
+        this.color1 = 'var(--primary-red)';
+        break;
+        };
+
+
+        this.customStyle['--page-color'] = this.color1;
+        this.updateStyles();
+        }
+        });
+})();
+</script>

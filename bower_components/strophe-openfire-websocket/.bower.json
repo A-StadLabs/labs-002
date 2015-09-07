@@ -1,0 +1,14 @@
+{
+  "name": "strophe-openfire-websocket",
+  "homepage": "https://github.com/gunblues/strophe-openfire-websocket",
+  "_release": "2afaed2236",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2afaed2236074c851346e04091b3ab71951354cb"
+  },
+  "_source": "git://github.com/gunblues/strophe-openfire-websocket.git",
+  "_target": "*",
+  "_originalSource": "gunblues/strophe-openfire-websocket",
+  "_direct": true
+}

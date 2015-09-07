@@ -1,0 +1,415 @@
+<!-- A-StadLabs 2015 -->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script src="../../bower_components/strophe.js/strophe.js"></script>
+<script src="../../bower_components/strophejs-plugins/muc/strophe.muc.js"></script>
+<script src="../../bower_components/strophe-openfire-websocket/strophe-openfire-websocket.js"></script>
+<script src="../../scripts/labs-locals.js"></script>
+
+<dom-module id="labs002-stage">
+<style>
+  :host {
+    display: block;
+    @apply(--layout-fit);
+    --page-color:  var(--primary-blue);
+  }
+
+  .canvas {
+    background-color: var(--page-color);
+    color: white; 
+    height: 100%;
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+    text-align: center;
+  }
+
+  .color {
+    background-color: var(--page-color);
+  }
+
+  neon-animated-pages {
+    height: 100%;
+  }
+
+
+
+  labs002-objectscollection {
+    height: 100%;
+    
+  }
+
+
+
+</style>
+<template>
+
+    <iron-localstorage id="localstorage" name="labs002-user" value="{{encruserid}}">
+  </iron-localstorage>
+
+   <iron-localstorage id="openfire1" name="labs002-openfire1" 
+       value="{{openfire1}}">
+        </iron-localstorage>
+        <iron-localstorage on-iron-localstorage-load="login"  id="openfire2" name="labs002-openfire2" value="{{openfire2}}">
+
+  <labs002-localstorageapi id="localapielem" userid="{{userid}}" pincode="{{pin1}}" data="{{localapi}}" encdata="{{localenc}}"></labs002-localstorageapi>
+
+
+  <neon-animated-pages id="pages" selected="{{selected}}"  class="color" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+
+  <!-- Stage 0: Pincode ingeven (bestaande gebruiker) -->
+  <dp-pin on-yes="toggleDrawer" on-pin-entered="decryptUser" pin="{{pin1}}" titel="Geef je pincode in." error="{{error}}">
+  </dp-pin>
+
+  <!-- Stage 1: Alle datasets renderen -->
+  <labs002-objectscollection id="objectcoll" userid="{{userid}}" on-open-camera="_qrreader" objectsdata="{{localapi}}" class="color" loggidin="{{loggidin}}"></labs002-objectscollection>
+
+  <!-- Stage 2: Voorbeeld van een eerste dataset -->
+  <labs002-renderer dataset="{{emptyProfile}}" on-save="saveDataset"></labs002-renderer>
+
+<!-- Stage 3: QR code lezer -->
+<neon-animatable>
+<div class="canvas">
+  <labs002-qrreader></labs002-qrreader>
+</div>
+</neon-animatable>
+
+<!-- Stage 4: QR code / Identificatie weergeven -->
+<neon-animatable>
+<div class="canvas">
+  <button on-click="_toWhere">back</button>
+  <alabs-qrcode code="{{openfire1}}"></alabs-qrcode>
+</div>
+</neon-animatable>
+
+<!-- Stage 5: Bevestig getuige (of iets anders) worden
+Op termijn komt hier uw Queueueueeue met todo's -->
+<neon-animatable>
+<div class="canvas">
+  <h2>{{titel}}</h2>
+  <div>{{tekst}}</div>
+  <button user="{{user}}" on-click="_ConfirmGetuige">JA!</button>
+  <button on-click="_CancelGetuige">NEEN!</button>
+</div>
+</neon-animatable>
+
+</neon-animated-pages>
+
+<paper-dialog id="dialog" modal>
+  <h2>{{dialogtitle}}</h2>
+  <paper-dialog-scrollable>
+    <span>{{dialogbody}}</span>
+  </paper-dialog-scrollable>
+  <div class="buttons">
+    <paper-button dialog-dismiss>Annuleren</paper-button>
+    <paper-button dialog-confirm on-click="senduserobject">Accepteren</paper-button>
+  </div>
+</paper-dialog>
+
+</template>
+</dom-module>
+<script>
+  (function() {
+
+    var conn; 
+
+    var pageselected = 0;
+
+    var stage;
+    var app;
+
+    var partner;
+
+    var server = "ws://www.opantwerpen.be:7070/ws/server";
+
+    var domein = "opantwerpen.be";
+
+    var openDialog = function(titel, body){
+      app.dialogtitle = titel;
+      app.dialogbody = body;
+      app.$.dialog.open();
+    };
+
+    var saveEncuserobject = function(e){
+    console.log(e);
+    app.localenc = e;
+   };
+
+    window.addEventListener('WebComponentsReady', function() {
+      // imports are loaded and elements have been registered
+      stage = document.getElementById("pages");
+      app = document.querySelector("labs002-stage");
+    });
+
+    var changeStage = function(e, titel, tekst, user){
+      stage.selected = e;
+      //app.log('iets vanuit vanilla naar polymer');
+      app.titel = titel;
+      app.tekst = tekst;
+      app.user = user;
+    };
+
+    // var syncwithme = function(e, user){
+    //   stage.selected = 5;
+    //   //app.log('iets vanuit vanilla naar polymer');
+    //   app.getuige = user;
+    // };
+
+
+    Polymer({
+      is: 'labs002-stage',
+
+      properties: {
+
+        selected: {
+          type: Number,
+          observer: "_selectedChanged"
+        }
+
+        // emptyProfile: {
+        //   type: Object,
+        //   value: { collection: [{
+        //     datasetName: "basisprofiel",
+        //     datasetTypes: ["titel", "string", "string"],
+        //     datasetLabels: ["Basisinfo", "voornaam", "naam"],
+        //     datasetWaarden: ["null", "Michael", "Thuy"]
+        //     },
+        //     {
+        //     datasetName: "huis",
+        //     datasetTypes: ["titel", "string", "string"],
+        //     datasetLabels: ["Huis", "straat", "postcode"],
+        //     datasetWaarden: ["null", "Gloriantlaan 39", "2050"]
+        //     }]}
+        //   }
+
+      },
+
+      _addDataset: function(){
+        var config = {};
+        config["snit"] = [2, "red"],
+        config["glasses"] = [1, "red"];
+        config["beard"] = [1, "red"];
+        config["face"] = [0, "red"];
+        config["head"] = [0, "red"];
+        config["top"] = [1, "red"];
+        config["bottom"] = [1, "red"];
+        config["shoes"] = [1, "red"];
+        config["body"] = [0, "var(--primary-lightblue)"];
+
+        var objectdata = {};
+        objectdata["name"] = "";
+        objectdata["firstname"] = "";
+        objectdata["birthdate"] = "";
+        objectdata["birthplace"] = "";
+
+        var object = {};
+        object["name"] = "basisprofiel";
+        object["data"] = objectdata;
+        object["config"] = config;
+        object["peers"] = [];
+        object["component"] = "labs002-avatar";
+
+        this.localapi.collection[object.name] = object;
+        this.$.localapielem.writeData();
+      },
+
+      /**
+     * Ready function to declare some variables and setup event listeners.
+     */
+
+      ready: function(){
+        //Dit staat hier voor de gemakkelijkheid
+        this.pin1 = "1234";
+
+        this.loggidin = false;
+        this.selected = pageselected;
+        this.entryAnimation = 'slide-from-right-animation';
+        this.exitAnimation = 'slide-left-animation';
+        var that = this;
+        
+        this.addEventListener('send-message', function(e){
+          console.log('event listener om een message te sturen', e);
+          that.sendMessage(e.detail.command, e.detail.towho);
+        });
+        
+        this.addEventListener('change-stage', function(e){
+          console.log('Changing stage', e.stage);
+          that.selected = e.stage;
+        });
+        
+        this.addEventListener('change-stage', function(e){
+          console.log('Changing stage', e.stage);
+          that.selected = e.stage;
+        });
+
+        this.addEventListener('add-avatar', function(){
+          that._addDataset();
+        });
+        
+        this.addEventListener('save', function(e){
+          console.log('Saving whole dataset', e.detail.dataset);
+          that.localapi = e.detail.dataset;
+          that.$.localapielem.writeData();
+          // En zet de nieuwe versie ook op mijn eigen peer toestellen
+          // for (var i = that.localapi.peers.length - 1; i >= 0; i--) {
+          //   console.log(that.localapi.peers[i]);
+          //   var partner = that.localapi.peers[i];
+          //   console.log('send user object to: ', partner, ' This value: ', that.localenc);
+          //   that.sendMessage(partner, "userupdate",that.localenc, that.encruserid);
+          // };
+        });
+
+        this.addEventListener('qr-identity', function(e){
+          that._toQR();
+        });
+
+        this.addEventListener('qr-reader', function(e){
+          that._qrreader(e);
+        });
+
+        this.addEventListener('background-activ', function(){
+          this.customStyle['--page-color'] = 'blue';
+          this.updateStyles();
+        });
+ 
+        this.addEventListener('add-data', function(e){
+          that._addDataset();
+        });        
+
+
+      },
+
+
+    senduserobject: function(){
+      console.log('send user object to: ', partner, ' This value: ', this.localenc);
+      this.localapi.peers.push(this.openfire1+'@'+domein);
+      this.localapi.peers.push(partner);
+      this.$.localapielem.writeData();
+      this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
+      this.$.localapielem.readData();
+    },
+
+    /** * Dees functie opent de qr reader en wacht tot em iets terug krijgt. */
+
+    _qrreader: function(e){
+      this.importHref("../elements/labs002-qrreader/labs002-qrreader.html", function(g) {
+        this.addEventListener("got-code", function(f){
+          //Hier doet em shit als em een code terug krijgt. 
+          //this.$.objectcoll.callback(e.detail);
+          console.log('Got Code.', f.detail.detail);
+          console.log('partner: ', e.detail.partner);
+          console.log('Action to perform: ', e.detail.command);
+          console.log('Dataset: ', e.detail.objectname);
+          console.log('Config: ', e.detail.objectconfig);
+          console.log('Data: ', e.detail.objectdata);
+          var partner = f.detail.detail+"@"+domein;
+          var command = e.detail.command;
+          var objectname = e.detail.objectname;
+          var objectdata = e.detail.objectdata;
+          var objectconfig = e.detail.objectconfig;
+          sendMessage(partner, command, objectname, objectconfig, objectdata);
+        });
+      // e.target.import is the import document.
+      //console.log('import',e);
+    }, function(g) {
+      //console.log('import',e);
+      // loading error
+    });
+      this.selected = 3;
+    },
+
+    /** * Userobject decrypteren met ingegeven pin code */
+    decryptUser: function(){
+      var decrypted = CryptoJS.AES.decrypt(this.encruserid, this.pin1);
+      var decrtostring = decrypted.toString(CryptoJS.enc.Utf8);
+      this.userid = decrtostring;
+      this.login(this.openfire1, this.openfire2);
+      this.loggidin = true;
+    },   
+
+    /** * Device wordt ingelogd op de chatserver */
+    login: function(username, password){
+      var that = this;
+      loginOpenfire(username, password, function(){
+        that.selected = 1;
+        that.$.localapielem.readData();
+      });
+    },
+
+    
+    // Navigational stuff
+    _toQR:function(){
+      this.selected = 4;
+    },
+
+    _toWhere:function(){
+      this.entryAnimation = 'slide-from-left-animation';
+      this.exitAnimation = 'slide-right-animation';
+      this.selected = 1;
+    },
+
+    _toScanner: function(){
+      this.selected = 3;
+    },
+
+    _ConfirmGetuige: function(e) {
+      console.log('Yes, bevestigd!', e.target.user);
+      var partner = e.target.user;
+      var dataset = e.target.dataset;
+      this.sendMessage(partner, "confirmgetuige", dataset, data);
+    },
+
+    _CancelGetuige: function() {
+      console.log('Neen, annuleren!');
+    },
+
+     /** * Wordt nog niet gebruikt, maar deze functie doet JOIN in chatroom. */
+    joinRoom: function(username, password, room){
+      var that = this;
+      this.room = room;
+      //console.log('--- User joins room "astadlabs"');
+      var room = this.room+"@conference.kingflurkel.dtdns.net";
+      var nick = username+"@kingflurkel.dtdns.net";
+      var password = password;
+      var history_attrs = null;
+      conn.muc.join(room, nick, that.msg_handler_cb, that.pres_handler_cb, that.roster_cb, password, history_attrs);
+    },
+
+    // Variable listeners
+
+    _selectedChanged: function(){
+      // console.log('page selected: ', this.selected);
+      switch (this.selected) {
+        case 0:
+        this.color1 = 'var(--primary-red)';
+        break;
+
+        case 1:
+        this.color1 = '#a4e5f9';
+        break;
+
+        case 2:
+        this.color1 = 'white';
+        break;
+        case 3:
+        this.color1 = 'grey';
+        break;
+
+        case 4:
+        this.color1 = 'white';
+        break;
+
+        case 5:
+        this.color1 = 'var(--primary-red)';
+        break;
+        };
+
+
+        this.customStyle['--page-color'] = this.color1;
+        this.updateStyles();
+        }
+        });
+
+
+})();
+</script>

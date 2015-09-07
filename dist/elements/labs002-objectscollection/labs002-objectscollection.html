@@ -1,0 +1,193 @@
+<!--
+<labs002-objectscollection id="objectcoll" userid="{{userid}}" on-open-camera="_qrreader" objectsdata="{{localapi}}"></labs002-objectscollection>
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="labs002-objectscollection">
+  <style>
+    :host {
+      display: block;
+      background: linear-gradient(#a4e5f9 55%, white 45%);
+
+      --can-scroll: scroll;
+      z-index: 910;
+      position: absolute;
+
+      overflow: var(--can-scroll);
+    }
+
+    .objectscollection {
+      height: 100%;
+      width: 100%;
+      padding: 0px 10vw 0px 10vw;
+
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+
+    }
+
+    .newbackgr {
+      background-color: #a4e5f9;
+      opacity: 0.8;
+      z-index: 9910;
+      height: 100%;
+      width: 100%;
+
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+
+    }
+
+
+  paper-toolbar {
+    height: 10%;
+    width: 100%;
+    padding: 0px;
+    background-color: transparent;
+    color: black;
+  }
+
+  .toolbarbtns {
+    width: 100%;
+  }
+
+
+
+  </style>
+  <template>
+
+  <paper-toolbar class="seamed">
+    <template is="dom-if" if="{{loggidin}}">
+      <div class="toolbarbtns color layout horizontal">
+        <button class="QRbtn" on-click="_toQR">QR</button>
+        <button class="QRbtn" on-click="_toQReader">QRREADER</button>
+<!--           <paper-toggle-button checked></paper-toggle-button>
+ -->
+        <span class="flex"></span>
+          <button on-click="_addDataset">+</button>
+      </div>
+    </template>
+  </paper-toolbar>
+
+
+
+    <div class="objectscollection">
+
+
+    <template is="dom-repeat" items="{{objectsdata_new.collection}}">
+      <labs002-renderer dataset="{{item}}" datasetkey="{{index}}" on-scroll="_Scroll"></labs002-renderer>
+    </template>
+
+    <template is="dom-if" if="{{backgroundactiv}}">  
+        <div class="newbackgr"></div>
+    </template>
+    </div>
+
+  </template>
+</dom-module>
+<script>
+(function() {
+  Polymer({
+    is: 'labs002-objectscollection',
+
+
+    behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+    properties: {
+      userid: {
+        type: String,
+        notify: true
+      },
+
+      objectsdata: {
+        type: Object,
+        notify: true,
+        observer: "_logData"
+      },
+
+      canscroll: {
+        type: Boolean,
+        value: true,
+        notify: true
+      },
+
+      backgroundactiv: {
+        type: Boolean,
+        value: false,
+        notify: true
+      }
+
+    },
+
+    ready: function(){
+
+      var that = this;
+      this.addEventListener('update-api', function(e){
+          console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
+          console.log(that.objectsdata.collection[e.detail.datasetkey]);
+          that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
+          that._logData();
+          that.fire('save', { dataset: this.objectsdata });
+        });
+
+      this.addEventListener('background-activ', function(){
+        this.backgroundactiv = true;
+      });
+
+      this.addEventListener('add-getuige', function(e){
+        console.log(e.detail.dataset);
+        //this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
+        //that._toQReader();
+        this.fire('qr-reader', { command: "addgetuige", dataset: e.detail.dataset, data: e.detail.data });
+      });
+
+    },
+
+    callback: function(e){
+      console.log(e);
+    },
+
+    _addDataset: function(){
+      this.fire('add-avatar');
+    },
+
+    _toQR: function(){
+      this.fire('qr-identity');
+    },
+
+    _toQReader: function(){
+      this.fire('qr-reader');
+    },
+
+    _logData: function(){
+      this.objectsdata_new = '';
+      this.objectsdata_new = this.objectsdata;
+      console.log('updated: ',this.objectsdata);
+      //console.log(this.objectsdata.collection[0]);
+      //this.$.renderer._dataset();
+    },
+
+    _Scroll:function(){
+
+      this.canscroll = !this.canscroll;
+      console.log('kan ik scrollen?:' , this.canscroll);
+      if (this.canscroll == true) {
+        this.customStyle['--can-scroll'] = 'scroll';
+      } else {
+        this.customStyle['--can-scroll'] = 'hidden';
+      };
+      
+      this.updateStyles(); 
+    }
+
+
+
+  });
+})();
+</script>

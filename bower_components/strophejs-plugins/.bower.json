@@ -1,0 +1,26 @@
+{
+  "name": "strophejs-plugins",
+  "version": "0.0.5",
+  "ignore": [
+    ".gitignore",
+    ".jshintignore",
+    ".jshintrc",
+    "bower.json",
+    "gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "strophe": ">=1.1"
+  },
+  "homepage": "https://github.com/strophe/strophejs-plugins",
+  "_release": "0.0.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.5",
+    "commit": "c67896f73069d0c9142563936e681ae4c0c1fcad"
+  },
+  "_source": "git://github.com/strophe/strophejs-plugins.git",
+  "_target": "~0.0.5",
+  "_originalSource": "strophe/strophejs-plugins",
+  "_direct": true
+}

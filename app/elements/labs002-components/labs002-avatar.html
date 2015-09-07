@@ -1,0 +1,1073 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="labs002-avatar-snitpages.html">
+<link rel="import" href="labs002-avatar-glassespages.html">
+<link rel="import" href="labs002-avatar-beardpages.html">
+<link rel="import" href="labs002-avatar-facepages.html">
+
+<link rel="import" href="labs002-avatar-headpages.html">
+<link rel="import" href="labs002-avatar-toppages.html">
+<link rel="import" href="labs002-avatar-bottompages.html">
+<link rel="import" href="labs002-avatar-shoespages.html">
+<link rel="import" href="labs002-avatar-bodypages.html">
+
+<dom-module id="labs002-avatar">
+  <style>
+    :host {
+      display: block;
+      position: relative;
+
+      padding: 0px;
+      margin: 0px;
+
+      --this-beardcolor: var(--primary-purple);
+      --this-glassescolor: rgba(0,0,0,0.2);
+      --this-topcolor: var(--primary-yellow);      
+      --this-bottomcolor: var(--primary-red);
+      --this-shoescolor: var(--primary-purple);
+      --this-bodycolor: var(--primary-lightblue);
+
+
+        width: 100%;
+      height: 100%;
+
+
+
+    }
+
+
+
+
+     .persontotal {
+      width: 200px;
+      height: 360px;
+      margin: 0px;
+}
+
+    .persontotal svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .fixit {
+      position: absolute;
+    }
+
+
+  .avatar {
+          margin: 0px;
+      padding: 0px;
+
+    }
+
+
+
+
+
+    /* ALL MATTERS ZOOMITEMS */
+
+
+    .zoomitems {
+      height: 10%;
+      top: 200px;
+      visibility: var(--zoom-items-visible);
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .zoomitems button {
+      border: 2px solid rgba(0,0,0,0.25);
+      outline: 0;
+      background-color: rgba(0,0,0,0);
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      padding: 0px;
+      margin: 0px 5px 0px 5px;
+    }
+
+    .zoomitems button svg {
+      width: 100%;
+      height: 100%;
+    }
+
+
+
+    /* ALL MATTERS EDITSTATE VISUAL */
+
+    .editstate {
+    border: 1px solid blue;      
+      width: 240px;
+      height: 360px;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .selector {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      width: 100%;
+    }
+
+    .selector button {
+      outline: 0;
+      border: none;
+      background-color: rgba(0,0,0,0.05);
+      width: 26px;
+      height: 26px;
+      border-radius: 13px;
+            @apply(--layout-horizontal);
+      @apply(--layout-center-center);
+      padding: 0px;
+    }
+
+
+
+    #selectsnit {
+      height: 25%;
+    }
+
+    #selectglasses {
+      height: 10%;
+    }
+
+    #selectbeard {
+      height: 15%;
+    }
+
+    #selecttop {
+      height: 8%;
+    }
+
+    #selectbottom {
+      height: 10%;
+    }
+
+    #selectshoes {
+      height: 4%;
+    }
+
+
+
+
+
+    labs002-avatar-snitpages {
+      width: 90%;
+    }
+    labs002-avatar-glassespages {
+      width: 90%;
+    }
+    labs002-avatar-beardpages {
+      width: 90%;
+    }
+    labs002-avatar-facepages {
+      width: 90%;
+    }
+    labs002-avatar-headpages {
+      width: 90%;
+    }
+    labs002-avatar-toppages {
+      width: 90%;
+    }
+
+    labs002-avatar-bottompages {
+      width: 90%;
+    }
+    labs002-avatar-shoespages {
+      width: 90%;
+    }
+    labs002-avatar-bodypages {
+      width: 90%;
+    }
+
+
+    /* Colors */
+    .beardcolor {
+      fill: var(--this-beardcolor);
+    }
+    .glassescolor {
+      fill: var(--this-glassescolor);
+    }
+    .topcolor {
+      fill: var(--this-topcolor);
+    }
+    .bottomcolor {
+      fill: var(--this-bottomcolor);
+    }
+    .shoescolor {
+      fill: var(--this-shoescolor);
+    }
+    .bodycolor {
+      fill: var(--this-bodycolor);
+    }
+
+
+    .fillgreen {
+      fill: var(--primary-green);
+    }
+    .fillblue {
+      fill: var(--primary-blue);
+    }
+    .filllightblue {
+      fill: var(--primary-lightblue);
+    }
+    .filldarkblue {
+      fill: var(--primary-darkblue);
+    }
+    .fillred {
+      fill: var(--primary-red);
+    }
+    .fillyellow {
+      fill: var(--primary-yellow);
+    }
+    .fillpurple {
+      fill: var(--primary-purple);
+    }
+
+
+    .snit {
+      z-index: 9999999;
+    }
+
+    .glasses {
+      z-index: 9999999;
+    }
+    .face {
+      z-index: 9999990;
+    }
+    .beard {
+      z-index: 9999980;
+    }
+    .head {
+      z-index: 9999970;
+    }
+    .top {
+      z-index: 9999960;   
+    }
+    .bottom {
+      z-index: 9999950;
+    }
+    .shoes {
+      z-index: 9999940;
+    }
+    .body {
+      z-index: 9999910;
+    }
+
+
+
+/*
+    .colorselector {
+      margin-top: 10px; 
+      width: 100%;
+      height: 12%;
+    }
+    .colorselector svg {
+      width: 10px;
+      height: 10px;
+    }
+
+
+    .valuesedit {
+      background-color: black;
+      opacity: 0.95;
+      width: 100%;
+      height: 100%;
+      z-index: 99999999999;
+
+    }
+*/
+  neon-animated-pages {
+    height: 100%;
+  }
+
+  .canvas {
+    height: 100%;
+    width: 100%;
+/*    background-color: yellow;
+*/  }
+
+
+    .container {
+      height: 100%;
+    }
+
+
+
+.yeye {
+  background-color: yellow;
+}
+
+  </style>
+  <template>
+
+
+<!-- Hier begint ALLES -->
+<neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+
+<!-- sectie 0 //   HIER BEGINT DE  FIXEDPEUP(NIET-EDIT)-SECTIE -->
+  <neon-animatable>
+    <div class="canvas">
+      <div class="layout vertical center-center container">
+      
+        <!-- BUTTONS -->
+        <div class="zoomitems layout horizontal center-center">
+
+          <!--  VISUAL AANPAS  -->    
+          <button on-click="toVisual">
+            <svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+              <g>
+                <polygon class="fillgreen" points="13.967,25.818 9.475,21.011 13.967,16.203 15.063,17.228 11.528,21.011 15.063,24.794  "/>
+              </g>
+              <g>
+                <circle class="fillgreen" cx="20.761" cy="21.011" r="2.714"/>
+              </g>
+              <g>
+                <polygon class="fillgreen" points="27.426,25.785 26.33,24.76 29.865,20.977 26.33,17.194 27.426,16.169 31.918,20.977  "/>
+              </g>
+            </svg>
+          </button>
+
+          <!--  WAARDEN AANPAS  -->    
+          <button on-click="toWaarden">
+            <svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+              <g>
+                <rect x="9.187" y="15.585" width="10.904" height="1.5"/>
+              </g>
+              <g>
+                <rect x="9.187" y="19.88" width="6.656" height="1.5"/>
+              </g>
+              <g>
+                <rect x="9.187" y="24.176" width="10.904" height="1.5"/>
+              </g>
+              <g>
+                <polygon fill="#010202" points="25.381,25.999 21.272,20.115 22.869,19 25.433,22.671 31.346,14.737 32.906,15.9   "/>
+              </g>
+            </svg>
+          </button>
+        </div>
+        <!-- Einde buttons -->
+
+        <!-- FIXED PEUP -->
+        <div on-click="toggleEdit" class="avatar">
+
+          <div class="snit fixit persontotal">
+            <labs002-avatar-snitpages 
+              selected="{{avatarSnit}}" 
+              color="{{avatarSnitColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-snitpages>
+          </div>
+     
+          <div class="glasses fixit persontotal">
+            <labs002-avatar-glassespages 
+              selected="{{avatarGlasses}}" 
+              color="{{avatarGlassesColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-glassespages>
+          </div>
+
+          <div class="face fixit persontotal">
+            <labs002-avatar-facepages 
+              selected="{{avatarFace}}" 
+              color="{{avatarFaceColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-facepages>
+          </div>
+
+          <div class="beard fixit persontotal">
+            <labs002-avatar-beardpages 
+              selected="{{avatarBeard}}" 
+              color="{{avatarBeardColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-beardpages>
+          </div>
+
+          <div class="head fixit persontotal">
+            <labs002-avatar-headpages 
+              selected="{{avatarHead}}" 
+              color="{{avatarHeardColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-headpages>
+          </div>
+
+          <div class="top fixit persontotal">
+            <labs002-avatar-toppages 
+              selected="{{avatarTop}}" 
+              color="{{avatarTopColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-toppages>
+          </div>
+
+          <div class="bottom fixit persontotal">
+            <labs002-avatar-bottompages 
+              selected="{{avatarBottom}}" 
+              color="{{avatarBottomColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-bottompages>
+          </div>
+
+          <div class="shoes fixit persontotal">
+            <labs002-avatar-shoespages 
+              selected="{{avatarShoes}}" 
+              color="{{avatarShoesColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-shoespages>
+          </div>
+
+          <div class="body fixit persontotal">
+            <labs002-avatar-bodypages 
+              selected="{{avatarBody}}" 
+              color="{{avatarBodyColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-bodypages>
+          </div>
+
+          <div class="persontotal"></div>
+      
+        </div>
+    
+      </div>
+
+    </div>
+
+  </neon-animatable>
+
+  <!-- sectie 1 // HIER BEGINT DE EDIT-VISUAL-SECTIE -->
+
+  <neon-animatable>
+    <div class="canvas">
+      <div class="layout vertical center-center container">
+
+
+
+
+        <!-- BUTTONS -->
+        <div class="zoomitems layout horizontal center-center">
+
+          <!--  VISUAL AANPAS  -->    
+          <button on-click="toVisual">
+            <svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+              <g>
+                <polygon class="fillgreen" points="13.967,25.818 9.475,21.011 13.967,16.203 15.063,17.228 11.528,21.011 15.063,24.794  "/>
+              </g>
+              <g>
+                <circle class="fillgreen" cx="20.761" cy="21.011" r="2.714"/>
+              </g>
+              <g>
+                <polygon class="fillgreen" points="27.426,25.785 26.33,24.76 29.865,20.977 26.33,17.194 27.426,16.169 31.918,20.977  "/>
+              </g>
+            </svg>
+          </button>
+
+          <!--  WAARDEN AANPAS  -->    
+          <button on-click="toWaarden">
+            <svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+              <g>
+                <rect x="9.187" y="15.585" width="10.904" height="1.5"/>
+              </g>
+              <g>
+                <rect x="9.187" y="19.88" width="6.656" height="1.5"/>
+              </g>
+              <g>
+                <rect x="9.187" y="24.176" width="10.904" height="1.5"/>
+              </g>
+              <g>
+                <polygon fill="#010202" points="25.381,25.999 21.272,20.115 22.869,19 25.433,22.671 31.346,14.737 32.906,15.9   "/>
+              </g>
+            </svg>
+          </button>
+        </div>
+        <!-- Einde buttons -->
+
+
+
+
+        <!-- VISUAL AANPAS GEDEELTE -->
+
+        <div class="editstate fixit">
+
+          <iron-selector id="editselected" selected="{{itemselected}}" attr-for-selected="name">
+                
+            <div id="selectsnit" class="selector"  on-click="_editselectedChanged" name="snit">
+              <button on-click="_PrevSnit">
+                <img src="arrow_left.svg">
+              </button>
+              <span class="flex"></span>
+              <button on-click="_NextSnit">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+
+            <div id="selectglasses" class="selector" on-click="_editselectedChanged" name="glasses">
+              <button on-click="_PrevGlasses">
+                <img src="arrow_left.svg">
+              </button>
+              <span class="flex"></span>
+              <button on-click="_NextGlasses">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+
+            <div id="selectbeard" class="selector" on-click="_editselectedChanged" name="beard">
+              <button on-click="_PrevBeard">
+                <img src="arrow_left.svg">
+              </button>
+              <span class="flex"></span>
+              <button on-click="_NextBeard">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+
+            <div id="selecttop" class="selector" on-click="_editselectedChanged" name="top">
+              <button on-click="_PrevTop">
+                <img src="arrow_left.svg">
+              </button>
+              <span class="flex"></span>
+              <button on-click="_NextTop">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+
+            <div id="selectbottom" class="selector" on-click="_editselectedChanged" name="bottom">
+              <button on-click="_PrevBottom">
+                <img src="arrow_left.svg">
+              </button>
+              <span class="flex"></span>
+              <button on-click="_NextBottom">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+
+            <div id="selectshoes" class="selector" on-click="_editselectedChanged" name="shoes">
+              <button on-click="_PrevShoes">
+                <img src="arrow_left.svg">
+              </button>
+              <span class="flex"></span>
+              <button on-click="_NextShoes">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+
+          </iron-selector> 
+
+        </div>
+
+
+<!--         <template is="dom-if" if="{{itemtoColor}}">
+
+          <div id="colorselector" class="colorselector">
+          </div>
+
+        </template>
+ -->
+
+
+        <!-- FIXED PEUP -->
+        <div on-click="toggleEdit" class="avatar">
+
+          <div class="snit fixit persontotal">
+            <labs002-avatar-snitpages 
+              selected="{{avatarSnit}}" 
+              color="{{avatarSnitColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-snitpages>
+          </div>
+     
+          <div class="glasses fixit persontotal">
+            <labs002-avatar-glassespages 
+              selected="{{avatarGlasses}}" 
+              color="{{avatarGlassesColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-glassespages>
+          </div>
+
+          <div class="face fixit persontotal">
+            <labs002-avatar-facepages 
+              selected="{{avatarFace}}" 
+              color="{{avatarFaceColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-facepages>
+          </div>
+
+          <div class="beard fixit persontotal">
+            <labs002-avatar-beardpages 
+              selected="{{avatarBeard}}" 
+              color="{{avatarBeardColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-beardpages>
+          </div>
+
+          <div class="head fixit persontotal">
+            <labs002-avatar-headpages 
+              selected="{{avatarHead}}" 
+              color="{{avatarHeardColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-headpages>
+          </div>
+
+          <div class="top fixit persontotal">
+            <labs002-avatar-toppages 
+              selected="{{avatarTop}}" 
+              color="{{avatarTopColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-toppages>
+          </div>
+
+          <div class="bottom fixit persontotal">
+            <labs002-avatar-bottompages 
+              selected="{{avatarBottom}}" 
+              color="{{avatarBottomColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-bottompages>
+          </div>
+
+          <div class="shoes fixit persontotal">
+            <labs002-avatar-shoespages 
+              selected="{{avatarShoes}}" 
+              color="{{avatarShoesColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-shoespages>
+          </div>
+
+          <div class="body fixit persontotal">
+            <labs002-avatar-bodypages 
+              selected="{{avatarBody}}" 
+              color="{{avatarBodyColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-bodypages>
+          </div>
+
+          <div class="persontotal"></div>
+      
+        </div>
+
+      </div>
+    </div>
+  </neon-animatable>
+
+
+
+
+
+  <!-- sectie 2 //   HIER BEGINT DE WAARDEN-SECTIE -->
+<neon-animatable>
+<div class="canvas">
+<div class="layout vertical center-center container">
+<h1>Waarden</h1>
+</div>
+</div>
+
+
+</neon-animatable>
+  <!-- HIER EINDIGT DE WAARDEN-SECTIE -->
+
+
+</neon-animated-pages>
+<!-- HIER eindigt ALLES -->
+
+  </template>
+  <script>
+  (function() {
+    Polymer({
+      is: 'labs002-avatar',
+
+      behaviors: [
+      Polymer.NeonAnimatableBehavior
+      ],
+
+      properties: {
+      config: {
+          type: Object,
+          observer: "_configChanged"
+        },
+
+      editmode: {
+        type: Boolean,
+        value: false,
+        observer: "editListener"
+      },
+
+      // editvisual: {
+      //   type: Boolean,
+      //   value: false
+      // },
+
+      editvalues: {
+        type: Boolean,
+        value: false
+      },
+
+
+
+      itemtoColor: {
+        type: String,
+        value: '',
+        notify: true,
+        observer: "_kleurChanged"        
+      }
+
+
+      },
+
+
+      ready: function(){
+        this.selected = 0;
+        this.entryAnimation = 'slide-from-right-animation';
+        this.exitAnimation = 'slide-left-animation';
+        console.log('avatar is ready');
+        console.log('avatar conf: ', this.config.beard[0]);
+
+        this.avatarSnit = this.config.snit[0];
+        this.avatarSnitColor = this.config.snit[1];
+
+        this.avatarGlasses = this.config.glasses[0];
+        this.avatarGlassesColor = this.config.glasses[1];
+
+        this.avatarBeard = this.config.beard[0];
+        this.avatarBeardColor = this.config.beard[1];
+
+        this.avatarFace = this.config.face[0];
+        this.avatarFaceColor = this.config.face[1];
+        this.entryAnimation = 'fade-in-animation';
+        this.exitAnimation = 'fade-out-animation';
+
+        this.avatarHead = this.config.head[0];
+        this.avatarHeadColor = this.config.head[1];
+
+        this.avatarTop = this.config.top[0];
+        this.avatarTopColor = this.config.top[1];
+
+        this.avatarBottom = this.config.bottom[0];
+        this.avatarBottomColor = this.config.bottom[1];
+
+        this.avatarShoes = this.config.shoes[0];
+        this.avatarShoesColor = this.config.shoes[1];
+
+        this.avatarBody = this.config.body[0];
+        this.avatarBodyColor = this.config.body[1];
+
+      },
+
+      _showData: function(){
+        this.editvalues =! this.editvalues;
+        console.log('SHOW DATA TOGGLED', this.editvalues);
+      },
+
+      _test: function(e){
+        console.log('hallo ',e);
+        this.config = e;
+      },
+
+      _configChanged: function(){
+        console.log('avatar conf changed: ', this.config);
+        // this.avatarSnit = this.config[snit][0];
+        // this.avatarSnitColor = this.config.snit[1];
+
+        // this.avatarGlasses = this.config[1].avatarGlasses[0];
+        // this.avatarGlassesColor = this.config[1].avatarGlasses[1];
+
+        // this.avatarBeard = this.config[1].avatar[2].avatarBeard[0];
+        // this.avatarBeardColor = this.config[1].avatar[2].avatarBeard[1];
+
+        // this.avatarFace = this.config[1].avatar[3].avatarFace[0];
+        // this.avatarFaceColor = this.config[1].avatar[3].avatarFace[1];
+
+        // this.avatarHead = this.config[1].avatar[4].avatarHead[0];
+        // this.avatarHeadColor = this.config[1].avatar[4].avatarHead[1];
+
+        // this.avatarTop = this.config[1].avatar[5].avatarTop[0];
+        // this.avatarTopColor = this.config[1].avatar[5].avatarTop[1];
+
+        // this.avatarBottom = this.config[1].avatar[6].avatarBottom[0];
+        // this.avatarBottomColor = this.config[1].avatar[6].avatarBottom[1];
+
+        // this.avatarShoes = this.config[1].avatar[7].avatarShoes[0];
+        // this.avatarShoesColor = this.config[1].avatar[7].avatarShoes[1];
+
+        // this.avatarBody = this.config[1].avatar[8].avatarBody[0];
+        // this.avatarBodyColor = this.config[1].avatar[8].avatarBody[1];
+
+
+
+
+      },
+
+
+      toVisual: function(){
+        this.selected = 1;
+      },
+
+      toWaarden: function(){
+        this.selected = 2;
+        console.log('Logshit!');
+      },
+
+      toggleEdit: function(){
+          this.editmode = !this.editmode;
+          this.editListener();
+          this.selected = 0;
+      
+      },
+
+      editListener: function(){
+          console.log("LISTEN editmode!", this.editmode);
+
+          if (this.editmode) {
+            // this.customStyle['--zoom-items-visible'] = 'visible';
+            // this.updateStyles(); 
+            this.fire('edit-state', {state: this.editmode});
+             
+          } else {
+            // this.customStyle['--zoom-items-visible'] = 'hidden';
+            // this.updateStyles();  
+            this.fire('edit-state', {state: this.editmode});
+
+          };
+
+      },
+
+      // _fireEdit: function(){
+      //   this.fire('edit-click');
+      // },
+
+
+      _showVisual: function(){
+          this.fire('background-activ');
+          this.ToggleVisual();
+      },
+
+      // ToggleVisual: function(){
+      //   this.editvisual = !this.editvisual;
+      // },
+
+      _editselectedChanged: function(){
+        this.itemtoColor = this.itemselected;
+        console.log(this.itemtoColor);
+
+      },
+
+      _kleurChanged: function(){
+        console.log('Dit is dus nu het item dan:' , this.itemtoColor);
+      },
+
+
+      /* Snit */
+
+      _NextSnit: function(){
+
+                  // console.log('TETTE');
+
+          this.avatarSnit++;
+          this.config.snit[0] = this.avatarSnit;
+
+          //console.log(this.config[1].avatar[0].avatarSnit[0]);
+        },
+
+      _PrevSnit: function(){
+                  console.log('TETTE');
+        if (this.avatarSnit >= 1) {
+              this.avatarSnit--;
+             this.config.snit[0] = this.avatarSnit;
+        };
+      },
+
+
+
+
+      /* Glasses */
+
+      _NextGlasses: function(){
+                  console.log('TETTE');
+          // this.avatarGlasses++;
+          // this.config[1].avatar[1].avatarGlasses[0] = this.avatarGlasses;
+        },
+
+      _PrevGlasses: function(){
+                  console.log('TETTE');
+        // if (this.avatarGlasses >= 1) {
+        //       this.avatarGlasses--;
+        //       this.config[1].avatar[1].avatarGlasses[0] = this.avatarGlasses;
+        // };
+
+      },
+
+
+
+
+      /* Beard */
+
+      _NextBeard: function(){
+          this.avatarBeard++;
+          //console.log(this.avatarBeard);
+          this.config[1].avatar[2].avatarBeard[0] = this.avatarBeard;
+          //console.log(this.config[1].avatar[2].avatarBeard[0]);
+        },
+
+      _PrevBeard: function(){
+        if (this.avatarBeard >= 1) {
+              this.avatarBeard--;
+              this.config[1].avatar[2].avatarBeard[0] = this.avatarBeard;
+        };
+
+      },
+
+
+
+
+      /* Head */
+
+      _NextHead: function(){
+          this.avatarHead++;
+          //console.log(this.avatarHead);
+          this.config[1].avatar[4].avatarHead[0] = this.avatarHead;
+          //console.log(this.config[1].avatar[4].avatarHead[0]);
+        },
+
+      _PrevHead: function(){
+        if (this.avatarHead >= 1) {
+              this.avatarHead--;
+              this.config[1].avatar[4].avatarHead[0] = this.avatarHead;
+        };
+
+      },
+
+
+
+
+      /* Top */
+
+      _NextTop: function(){
+          this.avatarTop++;
+          //console.log(this.avatarTop);
+          this.config[1].avatar[5].avatarTop[0] = this.avatarTop;
+          //console.log(this.config[1].avatar[5].avatarTop[0]);
+        },
+
+      _PrevTop: function(){
+        if (this.avatarTop >= 1) {
+              this.avatarTop--;
+              this.config[1].avatar[5].avatarTop[0] = this.avatarTop;
+        };
+
+      },
+
+
+
+
+      /* Bottom */
+
+      _NextBottom: function(){
+          this.avatarBottom++;
+          //console.log(this.avatarBottom);
+          this.config[1].avatar[6].avatarBottom[0] = this.avatarBottom;
+          //console.log(this.config[1].avatar[6].avatarBottom[0]);
+        },
+
+      _PrevBottom: function(){
+        if (this.avatarBottom >= 1) {
+              this.avatarBottom--;
+              this.config[1].avatar[6].avatarBottom[0] = this.avatarBottom;
+        };
+
+      },
+
+
+
+
+      /* Shoes */
+
+      _NextShoes: function(){
+          this.avatarShoes++;
+          //console.log(this.avatarShoes);
+          this.config[1].avatar[7].avatarShoes[0] = this.avatarShoes;
+          //console.log(this.config[1].avatar[7].avatarShoes[0]);
+        },
+
+      _PrevShoes: function(){
+        if (this.avatarShoes >= 1) {
+              this.avatarShoes--;
+              this.config[1].avatar[7].avatarShoes[0] = this.avatarShoes;
+        };
+
+      },
+
+
+
+
+      /* Body */
+
+      _NextBody: function(){
+          this.avatarBody++;
+          //console.log(this.avatarBody);
+          this.config[1].avatar[8].avatarBody[0] = this.avatarBody;
+          //console.log(this.config[1].avatar[8].avatarBody[0]);
+        },
+
+      _PrevBody: function(){
+        if (this.avatarBody >= 1) {
+              this.avatarBody--;
+              this.config[1].avatar[8].avatarBody[0] = this.avatarBody;
+        };
+
+      }
+
+
+
+
+
+
+    });
+  })();
+  </script>
+</dom-module>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

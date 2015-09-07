@@ -1,0 +1,300 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="../../bower_components/node-uuid/uuid.js"></script>
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script src="../../bower_components/strophe.js/strophe.js"></script>
+<script src="../../bower_components/strophejs-plugins/muc/strophe.muc.js"></script>
+<script src="../../bower_components/strophe-openfire-websocket/strophe-openfire-websocket.js"></script>
+<script src="../../scripts/labs-locals.js"></script>
+
+
+<dom-module id="labs002-newuserstage">
+  <style>
+    :host {
+      display: block;
+        font-family: Opensans;
+
+      width: 100%;
+      height: 100%;
+      --page-color:  var(--primary-green);
+    }
+
+    .color {
+      background-color: var(--page-color);
+    }
+
+    neon-animated-pages {
+      height: 100%;
+    }
+
+        .canvas {
+      background-color: red;
+      width: 100%;
+      height: 100%;
+      z-index: 99999;
+    }
+
+
+    h2 {
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      line-height: 125%;
+      color: white;
+    }
+
+
+    h3 {
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      color: white;
+      font-size: 14px;
+    }
+
+    a {
+            font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      color: white;
+      font-size: 12px;
+    }
+
+
+  button {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      padding: 20px;
+      margin: 40px 0px 0px 0px;
+      background-color: rgba(255,255,255,1);
+      color: var(--page-color);
+      outline: 0;
+      border: none;
+      text-align: center;
+      border-radius: 5px;
+      width: 250px;
+  }
+
+
+    button:hover {
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    }
+
+    button:active {
+    box-shadow: 0px 0px 0px rgba(0,0,0,0.2);
+    }
+
+
+
+  .introchoice {
+    text-align: center;
+    height: 50%;
+  }
+
+.tester {
+  border: 1px solid red;
+}
+
+  </style>
+  <template>
+
+
+     <iron-localstorage id="localstorage" name="labs002-user"
+          on-iron-localstorage-load="_userFound"  value="{{encruserid}}">
+        </iron-localstorage>
+
+       <iron-localstorage id="openfire1" name="labs002-openfire1" 
+       value="{{openfire1}}">
+        </iron-localstorage>
+        <iron-localstorage on-iron-localstorage-load="login" id="openfire2" name="labs002-openfire2" value="{{openfire2}}">
+        </iron-localstorage>
+
+       
+
+
+        <iron-localstorage id="localstoragedata" name="labs002-data" value="{{encdata}}">
+        </iron-localstorage>
+
+
+      <neon-animated-pages id="pages" selected="[[selected]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}" class="color">
+
+
+
+<!--       <div class="canvas color">
+
+      <div class="introchoice  layout vertical center-center" on-click="naarPin1">
+        <h2>Ik ben nieuw</h2>
+      </div>
+      <hr>
+      <div class="introchoice  layout vertical center-center" on-click="naarActivatie">
+        <h2>Ik heb al een toestel geactiveerd</h2>
+      </div>
+
+      </div> -->
+
+      
+
+
+      <!-- Neon 0 -->
+      <dp-pin on-yes="toggleDrawer" on-pin-entered="naarPin2" pin="{{pin1}}" titel="Kies een pincode." error="{{error}}" extrabtn="Ik heb al een toestel geactiveerd" on-naar-activ="naarActivatie"></dp-pin>
+      
+      <!-- Neon 1 -->
+        <dp-pin on-yes="toggleDrawer" on-pin-entered="naarPinCheck" pin="{{pin2}}" titel="Herhaal de pincode." error="{{error}}">
+        </dp-pin>
+
+      <!-- Neon 2 -->
+      <neon-animatable>
+      <div class="canvas layout vertical center-center color">
+        <h2>User wordt aangemaakt</h2>
+        <labs002-registeruser id="registeruser" on-user-created="_openfireUsercreated"></labs002-registeruser>
+      </div>
+      </neon-animatable>
+
+      <!-- Neon 3 -->
+      <neon-animatable>
+        <div class="canvas layout vertical center-center color">
+        <h2>Joooo geregistereerd</h2>
+        <a href="/">Ga verder</a>
+      </div>
+      </neon-animatable>
+
+      <!-- Neon 4 -->
+      <neon-animatable>
+        <div class="canvas layout vertical center-center color">
+        <!-- <h2>Neem uw ander toestel</h2>
+        <p>En klik op de qr code button</p>
+        <p>Scan de code met dit toestel</p>
+        <p>Geef toestemming om dit toestel te activeren</p>
+        <a href="/">Ga verder</a> -->
+        <labs002-qrreader></labs002-qrreader>
+      </div>
+      </neon-animatable>
+
+    </neon-animated-pages>
+
+  </template>
+</dom-module>
+<script>
+(function() {
+
+   var conn; 
+
+    var app;
+
+    var server = "ws://www.opantwerpen.be:7070/ws/server";
+
+    var domein = "opantwerpen.be";
+
+    window.addEventListener('WebComponentsReady', function() {
+      // imports are loaded and elements have been registered
+      app = document.querySelector("labs002-newuserstage");
+    });
+
+   var saveEncuserobject = function(e, f){
+    console.log(e);
+    app.encdata = e;
+    app.encruserid = f;
+    window.location = "/";
+   };
+
+
+  Polymer({
+    is: 'labs002-newuserstage',
+
+    properties: {
+      foo: {
+        type: String,
+        value: 'bar',
+        notify: true
+      },
+      selected: {
+        type: Number,
+        observer: "_selection"
+      }
+    },
+
+    _userFound: function(){
+      window.location = "user.html";
+    },
+
+    ready: function(){
+      this.selected = 0;
+      this.entryAnimation = 'slide-from-right-animation';
+      this.exitAnimation = 'slide-left-animation';
+    },
+
+    naarActivatie: function(){
+      /** * Opent de QR Reader en wacht op een got code event */
+      this.selected = 4; 
+      this.importHref("../elements/labs002-qrreader/labs002-qrreader.html", function(e) {
+        this.addEventListener("got-code", function(e){
+          console.log('got code ', e.detail.partner);
+          this.askBackup(e.detail.partner);
+        });
+        // e.target.import is the import document.
+        //console.log('import',e);
+      }, function(e) {
+        //console.log('import',e);
+        // loading error
+      });
+    },
+
+    naarPin1: function(){
+      this.selected = 0; 
+    },
+
+    naarPin2: function(){
+      this.selected = 1;
+    },
+
+    naarPinCheck: function(){
+      if(this.pin1==this.pin2){
+        console.log('Pincodes komen overeen');
+        this.selected = 2;
+      } else {
+        console.log('Pincodes niet gelijk');
+        this.error = "Pins komen niet overeen.";
+        this.selected = 0;
+        this.pin1 = '';
+        this.pin2 = '';
+      };
+    },
+
+
+    _selection: function(){
+      if(this.selected==2){
+        var userid = uuid.v1();
+        var pincode = this.pin1;
+        console.log('--- Created UUID ---');
+        console.log('--- userid: ', userid, ' - pincode: ', pincode, ' ---');
+
+        var tmpuserid = CryptoJS.AES.encrypt(userid, pincode);
+        console.log('--- Encrypted UUID ---');
+        this.encruserid = tmpuserid.toString();
+        this.$.localstorage.value = this.encruserid;
+        console.log('--- Stored encrypted UUID in localstorage ---');
+        this.selected++;
+      }
+    },
+
+    askBackup: function(e){
+      //console.log('asking for backup to ', e.detail);
+      sendMessage(e, "SYNC", null, null, null);
+    },
+
+    /** * User wordt ingelogd op de chatserver */
+    login: function(){
+      loginOpenfire(this.openfire1, this.openfire2);
+    }
+
+  });
+})();
+</script>

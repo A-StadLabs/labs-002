@@ -1,0 +1,272 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!-- <link rel="import" href="../labs002-components/labs002-avatar.html">
+ -->
+<link rel="import" href="../edit_on-animation.html">
+<link rel="import" href="../edit_off-animation.html">
+
+
+<dom-module id="labs002-renderer">
+  <style>
+    :host {
+      display: block;
+      --object-width: 200px;
+      --object-height: 360px;
+
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+
+    }
+
+      labs002-avatar {
+        width: var(--object-width);
+        height: var(--object-height);
+
+      }
+
+
+
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+    #rendercanvas {
+      visibility: hidden;
+      height: 0px;
+    }
+    button {
+      visibility: hidden;
+      height: 0px;
+    }
+
+    .editer {
+            visibility: visible;
+
+      height: 50px;
+    }
+
+
+
+  </style>
+  <template> 
+
+
+    <labs002-avatar zoommode="{{zoommode}}" config="{{config}}" id="avatar"></labs002-avatar>
+<!--     <button class="editer" on-click="_SwitchModes">edit</button>
+ -->
+
+        <div id="rendercanvas" class="layout vertical"></div>
+        <button on-click="_save">Save</button>
+
+
+    </template>
+</dom-module>
+<script>
+(function() {
+  Polymer({
+    is: 'labs002-renderer',
+
+    behaviors: [
+      Polymer.NeonAnimationRunnerBehavior
+    ],
+
+
+    properties: {
+      dataset: {
+        type: Object,
+        observer: "_dataset",
+        notify: true
+      },
+
+      zoommode: {
+        type: Boolean,
+        value: false,
+        observer: "_Scale"
+      },
+
+
+
+      animationConfig: {
+        value: function() {
+          return {
+            'edit_on': {
+              name: 'edit_on-animation',
+              node: this,
+              transformOrigin: '0px',
+              timing: {duration: 230}
+            },
+            'edit_off': {
+              name: 'edit_off-animation',
+              node: this,
+              timing: {duration: 230}
+            }
+          }          
+        }
+      }
+
+    },
+
+    listeners: {
+    // this event is fired when the animation finishes
+      'neon-animation-finish': '_onNeonAnimationFinish'
+    },
+
+    ready: function(){
+      var that = this;
+      this.addEventListener('zoom-state', function(e){
+        console.log('Zoom state changed ', e.detail.state);
+        that.zoommode = e.detail.state;
+        //that._Scale();
+      });
+    },
+
+    _save: function(){
+      var datasetkey = this.datasetkey;
+      // Dus hier moet ik terug door het dataset gaan en de waarden aanpassen.
+      //console.log(dataset);
+      //console.log(dataset.datasetLabels);
+      var dataset = this.dataset;
+      var types = dataset.datasetTypes;
+
+      for (var i = -1 + 1; i <= types.length; i++) {
+        var type = dataset.datasetTypes[i];
+        var item = dataset.datasetLabels[i];
+        console.log(type, item);
+        //console.log()
+        if(type=="string"){
+          var domitem = document.getElementById(item);
+          var domitemvalue = domitem.value;
+          console.log('dom item value: ', domitem, 'value; ', domitemvalue);
+          //console.log('heb ik hier de waarden wel? ', this.$.dataset.datasetLabels[i].value);
+          dataset.datasetWaarden[i] = domitemvalue;
+        };
+        if(type=="object"){
+          dataset.datasetWaarden[i] = this.config;
+        };
+
+        //this.fire('update-api', { dataset: dataset});
+      };
+
+      this.dataset = dataset;
+      
+      this.fire('update-api', { datasetkey: datasetkey, dataset: dataset});
+      //console.log('dataset zou geupdate moeten zijn');
+
+    },
+
+    _dataset: function(){
+      // Maak eerst het render plaatske leeg
+      console.log('data changed');
+      var myNode = document.getElementById("rendercanvas");
+      myNode.innerHTML = '';
+
+      var dataset = this.dataset;
+      //console.log(dataset);
+      //console.log(dataset.datasetLabels);
+      var webcomponent = dataset.datasetWebcomponent;
+
+      console.log('Webcomponent: ',webcomponent);
+  
+      var types = dataset.datasetTypes;
+
+      for (var i = -1 + 1; i <= types.length; i++) {
+        //console.log(types[i]);
+        var rendercanvas = this.$.rendercanvas;
+        switch(types[i]){
+          case "string":
+            // zet een input veld
+            //console.log('RENDERER: zet een input veld string', dataset[i]);
+            var textinput = document.createElement("input");
+            console.log('Is er een value? ',dataset.datasetWaarden[i]);
+            textinput.value = dataset.datasetWaarden[i];
+            textinput.placeholder = dataset.datasetLabels[i];
+            textinput.id = dataset.datasetLabels[i];
+            rendercanvas.appendChild(textinput);
+            break;
+          case "titel":
+            //zet een input veld
+            //console.log('RENDERER: zet een input veld number', dataset[i]);
+            var titel = document.createElement("h1");
+            titel.innerHTML = dataset.datasetLabels[i];
+            rendercanvas.appendChild(titel);
+            break;
+          case "object":
+            var waarden = dataset.datasetWaarden[i];
+            var zoommode = this.zoommode;
+            this.importHref("../elements/labs002-components/"+webcomponent+".html", function(e) {
+        // e.target.import is the import document.
+        var newelem = document.querySelector(webcomponent);
+            console.log(newelem, "config: ", waarden);
+            newelem.config = waarden;
+        // console.log('import',e);
+      }, function(e) {
+        // console.log('import',e);
+        // loading error
+      });
+            
+        }
+      };
+ 
+    },
+
+
+      _SwitchModes: function(){
+          this.zoommode = !this.zoommode;
+          this.fire('scroll');
+
+      },
+
+      _onNeonAnimationFinish: function(){
+        console.log('updating height');
+        this._heightUpdate();
+      },
+
+      _Scale: function(){
+
+          if (this.zoommode) {
+            this.playAnimation('edit_on');  
+             
+          } else {
+            this.playAnimation('edit_off');
+            // Saven als de edit state off is
+            //this._save();
+          };
+
+
+      },
+
+
+
+      _heightUpdate: function(){
+
+          if (this.zoommode) {
+            this.customStyle['--object-width'] = '220px';
+            this.customStyle['--object-height'] = '402px';
+
+            this.updateStyles(); 
+             
+          } else {
+            this.customStyle['--object-width'] = '200px';
+            this.customStyle['--object-height'] = '360px';
+
+            this.updateStyles();  
+
+          };
+
+
+      }
+
+
+
+  });
+})();
+</script>

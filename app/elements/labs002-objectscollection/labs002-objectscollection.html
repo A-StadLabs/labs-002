@@ -1,0 +1,343 @@
+<!--
+<labs002-objectscollection id="objectcoll" userid="{{userid}}" on-open-camera="_qrreader" objectsdata="{{localapi}}"></labs002-objectscollection>
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="labs002-objectscollection">
+  <style>
+    :host {
+      display: block;
+      background: linear-gradient(#a4e5f9 55%, white 45%);
+
+      --can-scroll: scroll;
+      z-index: 910;
+      position: absolute;
+
+      overflow: var(--can-scroll);
+
+      height: 100%;
+      width: 100%;
+
+      --renderer-width: 200px;
+      --renderer-height: 360px;
+      --renderer-position: none;
+
+    }
+
+    .objectscollection {
+      height: 100%;
+      width: 100%;
+
+      @apply(--layout-vertical);
+
+    }
+
+/*    .newbackgr {
+      background-color: #a4e5f9;
+      opacity: 0.8;
+      z-index: 9910;
+      height: 100%;
+      width: 100%;
+
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+
+    }
+
+
+    .newfrontgr {
+
+      background-color: red;
+      opacity: 0.8;
+      z-index: 99910;
+      height: 100%;
+      width: 100%;
+
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+    }*/
+
+
+  #toolbar {
+    height: 20vh;
+    width: 100%;
+    padding: 0px;
+    background-color: transparent;
+    color: black;
+  }
+
+  .toolbarbtns {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mainbtns {
+    height: 100%;
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+    padding: 10px;
+  }
+
+
+  .mainbtn {
+    height: 50px;
+    width: 50px;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.1);
+    border: none;
+    outline: 0;
+    margin: 5px;
+    padding: 0px;
+  }
+  .mainbtn img {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .QR {
+    background-color: white;
+  }
+
+
+  labs002-renderer {
+    width: var(--renderer-width);
+    height: var(--renderer-height);
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      position: var(--renderer-position);    
+  }
+
+
+
+  </style>
+  <template>
+
+
+
+
+
+    <div class="objectscollection">
+
+  <div id="toolbar"> 
+    <template is="dom-if" if="{{loggidin}}">
+      <div class="toolbarbtns color layout horizontal">
+<!--         <button class="QRbtn" on-click="_toQReader">QRREADER</button> -->
+<!--           <paper-toggle-button checked></paper-toggle-button>
+ -->
+        <span class="flex"></span>
+        <div class="mainbtns">
+           <button class="mainbtn" on-click="FireAddData">+</button>
+          <button class="mainbtn QR" on-click="_toQR"><img src="../images/QR.svg"></button>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+    <template is="dom-repeat" items="{{objectsdata_new}}">
+      <div class="vertical layout center-center">
+      <p>Hallo <span>{{item.array.objectname}}</span></p>
+      <labs002-renderer objectname="{{item.array.objectname}}" objectdata="{{item.array.objectdata}}" objectconfig="{{item.array.objectconfig}}" objectcomponent="{{item.array.objectcomponent}}"  on-scroll="_Scroll"></labs002-renderer>
+      <button on-click="validate" id="{{item.array.name}}">Valideer</button>
+      <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
+      </div>
+    </template>
+
+
+
+    </div>
+
+  </template>
+</dom-module>
+<script>
+(function() {
+  Polymer({
+    is: 'labs002-objectscollection',
+
+
+    behaviors: [
+        Polymer.NeonAnimatableBehavior
+      ],
+
+    properties: {
+      userid: {
+        type: String,
+        notify: true
+      },
+
+      objectsdata: {
+        type: Object,
+        notify: true,
+        observer: "_objectChanged"
+      },
+
+      canscroll: {
+        type: Boolean,
+        value: true,
+        notify: true
+      },
+
+      backgroundactiv: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      objectsdata_new: {
+        type: Array,
+        observer: "_lognewdata",
+        notify: true
+      }
+
+    },
+
+    ready: function(){
+
+      var that = this;
+      this.addEventListener('update-api', function(e){
+          console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
+          console.log(that.objectsdata.collection[e.detail.datasetkey]);
+          that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
+          that._logData();
+          that.fire('save', { dataset: this.objectsdata });
+        });
+
+      this.addEventListener('background-activ', function(){
+        this.backgroundactiv = true;
+      });
+
+      this.addEventListener('add-getuige', function(e){
+        console.log(e.detail.dataset);
+        //this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
+        //that._toQReader();
+        this.fire('qr-reader', { command: "VERIFY", dataset: e.detail.dataset, data: e.detail.data });
+      });
+
+
+      this.addEventListener('edit-state', function(e){
+        console.log('Edit state changed ', e.detail.state);
+
+        that.editmode = e.detail.state;
+
+         if (this.editmode) {
+        this.customStyle['--renderer-width'] = '100%';
+        this.customStyle['--renderer-height'] = '100%';  
+        this.customStyle['--renderer-position'] = 'absolute';             
+
+          } else {
+        this.customStyle['--renderer-width'] = '200px';
+        this.customStyle['--renderer-height'] = '360px';
+        this.customStyle['--renderer-position'] = 'none';             
+
+          };
+
+        this.updateStyles(); 
+
+      });
+
+
+    },
+
+    _objectChanged: function(){
+      console.log('updated: ',this.objectsdata.collection);
+      this.objectsdata_new = [];
+      var objectsdata_new = this.objectsdata_new;
+      var p = this.objectsdata.collection;
+      for (var key in p) {
+        if (p.hasOwnProperty(key)) {
+          console.log(key + " -> " + p[key]);
+          console.log(p[key].name);
+          this.push('objectsdata_new', { array: {objectname: p[key].name, 
+                                objectconfig: p[key].config,
+                                objectdata: p[key].data,
+                                objectpeers: p[key].peers,
+                                objectcomponent: p[key].component}});
+          console.log('New objectsdata: ',objectsdata_new);
+        }
+      };
+      this.objectsdata_new = objectsdata_new;
+    },
+
+    _lognewdata: function(){
+      console.log('New objectsdata changed: ',this.objectsdata_new);
+    },
+
+    validate: function(e){
+      console.log("validate", e.target.id);
+      var i = e.target.id;
+      var data = this.objectsdata_new.collection[i].data;
+      var config = this.objectsdata_new.collection[i].config;
+      var name = this.objectsdata_new.collection[i].name;
+      this.fire('qr-reader', { command: "VERIFY", objectname: name, objectconfig: config, objectdata: JSON.stringify(data) });
+    },
+
+    callback: function(e){
+      console.log(e);
+    },
+
+    _addDataset: function(){
+      this.fire('add-avatar');
+    },
+
+    _toQR: function(){
+      this.fire('qr-identity');
+    },
+
+    _toQReader: function(){
+      this.fire('qr-reader');
+    },
+
+   
+
+    _Scroll:function(){
+
+      this.canscroll = !this.canscroll;
+      if (this.canscroll == true) {
+        this.customStyle['--can-scroll'] = 'scroll';
+      } else {
+        this.customStyle['--can-scroll'] = 'hidden';
+      };
+      
+      this.updateStyles(); 
+
+    },
+
+
+    _CancelChanges: function(){
+      this.backgroundactiv = !this.backgroundactiv;
+    },
+
+
+    _ConfirmChanges: function(){
+      this.backgroundactiv = !this.backgroundactiv;
+
+      renderer = document.querySelector("labs002-renderer");
+      avatar = document.querySelector("labs002-avatar");
+
+      renderer._SwitchModes();
+      renderer._save();
+      avatar.ToggleVisual();
+      avatar.zoomListener();
+
+    },
+
+
+
+
+    FireAddData: function(){
+      this.fire('add-data');
+    }
+
+
+
+  });
+})();
+</script>
