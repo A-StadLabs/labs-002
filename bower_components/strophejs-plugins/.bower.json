@@ -1,6 +1,6 @@
 {
   "name": "strophejs-plugins",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "ignore": [
     ".gitignore",
     ".jshintignore",
@@ -13,14 +13,13 @@
     "strophe": ">=1.1"
   },
   "homepage": "https://github.com/strophe/strophejs-plugins",
-  "_release": "0.0.5",
+  "_release": "0.0.6",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.5",
-    "commit": "c67896f73069d0c9142563936e681ae4c0c1fcad"
+    "tag": "v0.0.6",
+    "commit": "04d22ec9ffeccfd7a03813b9a1b63bcaaf509815"
   },
   "_source": "git://github.com/strophe/strophejs-plugins.git",
   "_target": "~0.0.5",
-  "_originalSource": "strophe/strophejs-plugins",
-  "_direct": true
+  "_originalSource": "strophe/strophejs-plugins"
 }

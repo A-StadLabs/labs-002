@@ -54,7 +54,7 @@ function $build(name, attrs) { return new Strophe.Builder(name, attrs); }
 /** Function: $msg
  *  Create a Strophe.Builder with a <message/> element as the root.
  *
- *  Parmaeters:
+ *  Parameters:
  *    (Object) attrs - The <message/> element attributes in object notation.
  *
  *  Returns:
@@ -458,14 +458,16 @@ Strophe = {
                     var attr = arg[i];
                     if (typeof(attr) == "object" &&
                         typeof(attr.sort) == "function" &&
-                        attr[1] !== undefined) {
+                        attr[1] !== undefined &&
+                        attr[1] !== null) {
                         node.setAttribute(attr[0], attr[1]);
                     }
                 }
             } else if (typeof(arg) == "object") {
                 for (k in arg) {
                     if (arg.hasOwnProperty(k)) {
-                        if (arg[k] !== undefined) {
+                        if (arg[k] !== undefined &&
+                            arg[k] !== null) {
                             node.setAttribute(k, arg[k]);
                         }
                     }
@@ -992,7 +994,7 @@ Strophe = {
  *  XML DOM builder.
  *
  *  This object provides an interface similar to JQuery but for building
- *  DOM element easily and rapidly.  All the functions except for toString()
+ *  DOM elements easily and rapidly.  All the functions except for toString()
  *  and tree() return the object, so calls can be chained.  Here's an
  *  example using the $iq() builder helper.
  *  > $iq({to: 'you', from: 'me', type: 'get', id: '1'})
@@ -1676,12 +1678,16 @@ Strophe.Connection.prototype = {
      *  Returns:
      *    A unique string to be used for the id attribute.
      */
-    getUniqueId: function (suffix)
-    {
+    getUniqueId: function(suffix) {
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0,
+                v = c == 'x' ? r : r & 0x3 | 0x8;
+            return v.toString(16);
+        });
         if (typeof(suffix) == "string" || typeof(suffix) == "number") {
-            return ++this._uniqueId + ":" + suffix;
+            return uuid + ":" + suffix;
         } else {
-            return ++this._uniqueId + "";
+            return uuid + "";
         }
     },
 
@@ -1926,6 +1932,24 @@ Strophe.Connection.prototype = {
      */
     /* jshint unused:false */
     rawOutput: function (data)
+    {
+        return;
+    },
+    /* jshint unused:true */
+
+    /** Function: nextValidRid
+     *  User overrideable function that receives the new valid rid.
+     *
+     *  The default function does nothing. User code can override this with
+     *  > Strophe.Connection.nextValidRid = function (rid) {
+     *  >    (user code)
+     *  > };
+     *
+     *  Parameters:
+     *    (Number) rid - The next valid rid
+     */
+    /* jshint unused:false */
+    nextValidRid: function (rid)
     {
         return;
     },

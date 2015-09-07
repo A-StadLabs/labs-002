@@ -22,6 +22,8 @@
       --renderer-width: 200px;
       --renderer-height: 360px;
       --renderer-position: none;
+      --renderer-backgr:transparent;
+
 
     }
 
@@ -75,11 +77,14 @@
   labs002-renderer {
     width: var(--renderer-width);
     height: var(--renderer-height);
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      position: var(--renderer-position);    
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    position: var(--renderer-position);    
+    background-color: var(--renderer-backgr);
   }
 
 </style>
@@ -102,6 +107,7 @@
 
     <template is="dom-repeat" items="{{objectsdata_new}}">
       <div class="vertical layout center-center">
+<<<<<<< Updated upstream
         <p>Hallo <span>{{item.array.objectname}}</span></p>
 
         <labs002-renderer 
@@ -115,6 +121,12 @@
         <button on-click="validate" id="{{item.array.name}}">Valideer</button>
         <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
         
+=======
+<!--       <p>Hallo <span>{{item.array.objectname}}</span></p> -->
+      <labs002-renderer objectname="{{item.array.objectname}}" objectdata="{{item.array.objectdata}}" objectconfig="{{item.array.objectconfig}}" objectcomponent="{{item.array.objectcomponent}}"  on-scroll="_Scroll"></labs002-renderer>
+      <button on-click="validate" id="{{item.array.name}}">Valideer</button>
+      <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
+>>>>>>> Stashed changes
       </div>
     </template>
 
@@ -191,6 +203,7 @@
 
         that.editmode = e.detail.state;
 
+<<<<<<< Updated upstream
         if (this.editmode) {
           this.customStyle['--renderer-width'] = '100%';
           this.customStyle['--renderer-height'] = '100%';  
@@ -200,6 +213,21 @@
           this.customStyle['--renderer-height'] = '360px';
           this.customStyle['--renderer-position'] = 'none';             
         };
+=======
+         if (this.editmode) {
+        this.customStyle['--renderer-width'] = '100%';
+        this.customStyle['--renderer-height'] = '100%';  
+        this.customStyle['--renderer-position'] = 'absolute';             
+        this.customStyle['--renderer-backgr'] = 'blue';             
+
+          } else {
+        this.customStyle['--renderer-width'] = '200px';
+        this.customStyle['--renderer-height'] = '360px';
+        this.customStyle['--renderer-position'] = 'none';             
+        this.customStyle['--renderer-backgr'] = 'transparent';             
+
+          };
+>>>>>>> Stashed changes
 
         this.updateStyles(); 
 
