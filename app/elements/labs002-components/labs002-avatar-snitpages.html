@@ -34,11 +34,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
 
 
-      <neon-animated-pages id="snitpages" selected="{{selected}}"  entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
-
+      <neon-animated-pages id="snitpages" selected="{{selected}}"  entry-animation="{{SnitEntry}}" exit-animation="{{SnitExit}}">
 
           <neon-animatable>
-
           </neon-animatable>
 
 
@@ -208,7 +206,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-
     </neon-animated-pages>
 
 
@@ -235,12 +232,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           value: '',
           observer: "_Watchit"
+        },
+
+        SnitEntry: {
+          type: String,
+          value: '',
+          observer: "_Logit"
         }
       },
 
       ready: function(){
         // this.entryAnimation = 'slide-from-right-animation';
         // this.exitAnimation = 'slide-left-animation';
+
+      },
+
+      _Logit: function(){
+
+        console.log('DE SNITENTRY IS =============' , this.SnitEntry);
+        console.log('DE SNITEXIT IS =============' , this.SnitExit);
       },
 
 

@@ -48,35 +48,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-     .persontotal {
-      width: 200px;
-      height: 360px;
-      margin: 0px;
-}
-
-    .persontotal svg {
-      width: 100%;
-      height: 100%;
-    }
 
     .fixit {
       position: absolute;
     }
 
 
-  .avatar {
+    .avatar {
+      width: 280px;
+/*      height: 100%;*/
+/*      border: 1px solid blue;      */
+      @apply(--layout-horizontal);
+      @apply(--layout-center-center);
       margin: 0px;
       padding: 0px;
+
+    }
+
+
+
+     .avatarparts {
+      width: 200px;
+      height: 360px;
+      margin: 0px;
+/*      border: 1px solid red;      */
+    }
+
+    .avatarparts svg {
+      width: 100%;
+      height: 100%;
     }
 
 
 
 
+    /* ALL MATTERS avatarbtns */
 
-    /* ALL MATTERS ZOOMITEMS */
 
-
-    .zoomitems {
+    .avatarbtns {
       height: 100%;
       padding-top: 100px;
       visibility: var(--zoom-items-visible);
@@ -84,32 +93,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       margin: 0px;
     }
 
-    .zoomitems button {
-      border: 2px solid rgba(0,0,0,0.25);
+    .avatarbtns button {
       outline: 0;
       background-color: rgba(0,0,0,0);
       width: 40px;
       height: 40px;
       border-radius: 20px;
       padding: 0px;
-      margin: 0px 5px 0px 5px;
+/*      margin: 0px 5px 0px 5px;*/
     }
 
-    .zoomitems button svg {
+    .avatarbtns button img {
       width: 100%;
       height: 100%;
     }
 
 
 
-    /* ALL MATTERS EDITSTATE VISUAL */
+    /* ALL MATTERS avatarvisual */
 
-    .editstate {
-    border: 1px solid blue;      
-      width: 240px;
+    .visualbtns {
       height: 360px;
       margin: 0px;
       padding: 0px;
+/*      border: 1px solid black;*/
+/*      background-color: rgba(0,0,0,0.1);      */
+ 
     }
 
     .selector {
@@ -125,15 +134,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       width: 26px;
       height: 26px;
       border-radius: 13px;
-            @apply(--layout-horizontal);
+      @apply(--layout-horizontal);
       @apply(--layout-center-center);
       padding: 0px;
+      margin: 0px;
+/*      border: 1px solid red;*/
     }
 
 
 
     #selectsnit {
-      height: 25%;
+      height: 35%;
     }
 
     #selectglasses {
@@ -145,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     #selecttop {
-      height: 8%;
+      height: 15%;
     }
 
     #selectbottom {
@@ -153,7 +164,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     #selectshoes {
-      height: 4%;
+      height: 15%;
     }
 
 
@@ -161,32 +172,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
     labs002-avatar-snitpages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-glassespages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-beardpages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-facepages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-headpages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-toppages {
-      width: 90%;
+      width: 100%;
     }
 
     labs002-avatar-bottompages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-shoespages {
-      width: 90%;
+      width: 100%;
     }
     labs002-avatar-bodypages {
-      width: 90%;
+      width: 100%;
     }
 
 
@@ -314,24 +325,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- Hier begint ALLES -->
 <neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
 
+
 <!-- sectie 0 //   HIER BEGINT DE  FIXEDPEUP(NIET-EDIT)-SECTIE -->
   <neon-animatable>
     <div class="canvas">
       <div class="layout horizontal center-center container">
 
-        <!-- FIXED PEUP -->
-        <div class="avatar" on-click="toggleZoomitems">
+        <!-- VOLLEDIGE PEUP -->
 
-          <div class="snit fixit persontotal">
+        <div class="avatar" on-click="toggleAvatarbtns">
+
+        <!-- PEUP // parts -->
+          <div class="snit fixit avatarparts">
             <labs002-avatar-snitpages 
               selected="{{avatarSnit}}" 
               color="{{avatarSnitColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
+              SnitEntry="{{SnitEntry}}" 
+              SnitExit="{{SnitExit}}">
             </labs002-avatar-snitpages>
           </div>
      
-          <div class="glasses fixit persontotal">
+          <div class="glasses fixit avatarparts">
             <labs002-avatar-glassespages 
               selected="{{avatarGlasses}}" 
               color="{{avatarGlassesColor}}" 
@@ -340,7 +354,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-glassespages>
           </div>
 
-          <div class="face fixit persontotal">
+          <div class="face fixit avatarparts">
             <labs002-avatar-facepages 
               selected="{{avatarFace}}" 
               color="{{avatarFaceColor}}" 
@@ -349,16 +363,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-facepages>
           </div>
 
-          <div class="beard fixit persontotal">
+          <div class="beard fixit avatarparts">
             <labs002-avatar-beardpages 
               selected="{{avatarBeard}}" 
               color="{{avatarBeardColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
+              BeardEntry="{{BeardEntry}}" 
+              BeardExit="{{BeardExit}}">
             </labs002-avatar-beardpages>
           </div>
 
-          <div class="head fixit persontotal">
+          <div class="head fixit avatarparts">
             <labs002-avatar-headpages 
               selected="{{avatarHead}}" 
               color="{{avatarHeardColor}}" 
@@ -367,7 +381,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-headpages>
           </div>
 
-          <div class="top fixit persontotal">
+          <div class="top fixit avatarparts">
             <labs002-avatar-toppages 
               selected="{{avatarTop}}" 
               color="{{avatarTopColor}}" 
@@ -376,7 +390,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-toppages>
           </div>
 
-          <div class="bottom fixit persontotal">
+          <div class="bottom fixit avatarparts">
             <labs002-avatar-bottompages 
               selected="{{avatarBottom}}" 
               color="{{avatarBottomColor}}" 
@@ -385,7 +399,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-bottompages>
           </div>
 
-          <div class="shoes fixit persontotal">
+          <div class="shoes fixit avatarparts">
             <labs002-avatar-shoespages 
               selected="{{avatarShoes}}" 
               color="{{avatarShoesColor}}" 
@@ -394,7 +408,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-shoespages>
           </div>
 
-          <div class="body fixit persontotal">
+          <div class="body fixit avatarparts">
             <labs002-avatar-bodypages 
               selected="{{avatarBody}}" 
               color="{{avatarBodyColor}}" 
@@ -403,69 +417,247 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-bodypages>
           </div>
 
-          <div class="persontotal"></div>
+          <div class="avatarparts"></div>
       
-        </div>
-
-        <!-- BUTTONS -->
-        <div class="zoomitems layout vertical">
-          <!--  VISUAL AANPAS  -->    
+        <!-- FIXED PEUP // btns -->
+        <div class="avatarbtns layout vertical">
           <button on-click="toVisual">
-            <svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-           width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
-              <g>
-                <polygon class="fillgreen" points="13.967,25.818 9.475,21.011 13.967,16.203 15.063,17.228 11.528,21.011 15.063,24.794  "/>
-              </g>
-              <g>
-                <circle class="fillgreen" cx="20.761" cy="21.011" r="2.714"/>
-              </g>
-              <g>
-                <polygon class="fillgreen" points="27.426,25.785 26.33,24.76 29.865,20.977 26.33,17.194 27.426,16.169 31.918,20.977  "/>
-              </g>
-            </svg>
+                <img src="visualbtn.svg">
           </button>
-
-          <!--  WAARDEN AANPAS  -->    
           <button on-click="toWaarden">
-            <svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-           width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
-              <g>
-                <rect x="9.187" y="15.585" width="10.904" height="1.5"/>
-              </g>
-              <g>
-                <rect x="9.187" y="19.88" width="6.656" height="1.5"/>
-              </g>
-              <g>
-                <rect x="9.187" y="24.176" width="10.904" height="1.5"/>
-              </g>
-              <g>
-                <polygon fill="#010202" points="25.381,25.999 21.272,20.115 22.869,19 25.433,22.671 31.346,14.737 32.906,15.9   "/>
-              </g>
-            </svg>
+                <img src="waardenbtn.svg">
           </button>
         </div>
-        <!-- Einde buttons -->
-
-    
 
 
 
+
+        </div>
       </div>
 
     </div>
 
   </neon-animatable>
 
+
+
+
+
+<!-- sectie 1 //   HIER BEGINT DE VISUAL EDIT -->
+
+
+  <neon-animatable>
+    <div class="canvas">
+      <div class="layout horizontal center-center container">
+
+        <!-- VOLLEDIGE PEUP -->
+
+        <div class="avatar">
+
+        <!-- PEUP // 1e rij knopjes -->
+        <div class="layout vertical visualbtns">
+
+            <div id="selectsnit" class="selector"  on-click="_editselectedChanged" name="snit">
+              <button on-click="_PrevSnit">
+                <img src="arrow_left.svg">
+              </button>
+            </div>
+            <div id="selectglasses" class="selector" on-click="_editselectedChanged" name="glasses">
+              <button on-click="_PrevGlasses">
+                <img src="arrow_left.svg">
+              </button>
+            </div>
+            <div id="selectbeard" class="selector" on-click="_editselectedChanged" name="beard">
+              <button on-click="_PrevBeard">
+                <img src="arrow_left.svg">
+              </button>
+            </div>
+            <div id="selecttop" class="selector" on-click="_editselectedChanged" name="top">
+              <button on-click="_PrevTop">
+                <img src="arrow_left.svg">
+              </button>
+            </div>
+            <div id="selectbottom" class="selector" on-click="_editselectedChanged" name="bottom">
+              <button on-click="_PrevBottom">
+                <img src="arrow_left.svg">
+              </button>
+            </div>
+            <div id="selectshoes" class="selector" on-click="_editselectedChanged" name="shoes">
+              <button on-click="_PrevShoes">
+                <img src="arrow_left.svg">
+              </button>
+            </div>
+        </div>
+
+
+        <!-- PEUP // parts -->
+          <div class="snit fixit avatarparts">
+            <labs002-avatar-snitpages 
+              selected="{{avatarSnit}}" 
+              color="{{avatarSnitColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-snitpages>
+          </div>
+     
+          <div class="glasses fixit avatarparts">
+            <labs002-avatar-glassespages 
+              selected="{{avatarGlasses}}" 
+              color="{{avatarGlassesColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-glassespages>
+          </div>
+
+          <div class="face fixit avatarparts">
+            <labs002-avatar-facepages 
+              selected="{{avatarFace}}" 
+              color="{{avatarFaceColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-facepages>
+          </div>
+
+          <div class="beard fixit avatarparts">
+            <labs002-avatar-beardpages 
+              selected="{{avatarBeard}}" 
+              color="{{avatarBeardColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-beardpages>
+          </div>
+
+          <div class="head fixit avatarparts">
+            <labs002-avatar-headpages 
+              selected="{{avatarHead}}" 
+              color="{{avatarHeardColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-headpages>
+          </div>
+
+          <div class="top fixit avatarparts">
+            <labs002-avatar-toppages 
+              selected="{{avatarTop}}" 
+              color="{{avatarTopColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-toppages>
+          </div>
+
+          <div class="bottom fixit avatarparts">
+            <labs002-avatar-bottompages 
+              selected="{{avatarBottom}}" 
+              color="{{avatarBottomColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-bottompages>
+          </div>
+
+          <div class="shoes fixit avatarparts">
+            <labs002-avatar-shoespages 
+              selected="{{avatarShoes}}" 
+              color="{{avatarShoesColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-shoespages>
+          </div>
+
+          <div class="body fixit avatarparts">
+            <labs002-avatar-bodypages 
+              selected="{{avatarBody}}" 
+              color="{{avatarBodyColor}}" 
+              entryAnimation="{{entrySnit}}" 
+              exitSnit="{{exitAnimationSnit}}">
+            </labs002-avatar-bodypages>
+          </div>
+
+          <div class="avatarparts"></div>
+      
+        <!-- FIXED PEUP // btns -->
+<!--         <div class="avatarbtns layout vertical">
+          <button on-click="toVisual">
+                <img src="visualbtn.svg">
+          </button>
+          <button on-click="toWaarden">
+                <img src="waardenbtn.svg">
+          </button>
+        </div> -->
+
+
+        <!-- PEUP // 2e rij knopjes -->
+        <div class="layout vertical visualbtns">
+            <div id="selectsnit" class="selector"  on-click="_editselectedChanged" name="snit">
+              <button on-click="_NextSnit">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+            <div id="selectglasses" class="selector" on-click="_editselectedChanged" name="glasses">
+              <button on-click="_NextGlasses">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+            <div id="selectbeard" class="selector" on-click="_editselectedChanged" name="beard">
+              <button on-click="_NextBeard">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+            <div id="selecttop" class="selector" on-click="_editselectedChanged" name="glasses">
+              <button on-click="_NextTop">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+            <div id="selectbottom" class="selector" on-click="_editselectedChanged" name="glasses">
+              <button on-click="_NextBottom">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+            <div id="selectshoes" class="selector" on-click="_editselectedChanged" name="glasses">
+              <button on-click="_NextShoes">
+                <img src="arrow_right.svg">
+              </button>
+            </div>
+        </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </neon-animatable>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- DIT IS DE VORIGE TESTSECTIE ALS BACKUP -->
   <!-- sectie 1 // HIER BEGINT DE EDIT-VISUAL-SECTIE -->
 
   <neon-animatable>
     <div class="canvas">
-      <div class="layout vertical center-center container">
+      <div class="layout horizontal center-center container">
+        <div on-click="editListener" class="avatar">
 
 
-        <!-- VISUAL AANPAS GEDEELTE -->
-
-        <div class="editstate fixit">
+        <!-- FIXED PEUP // visual edit -->
+        
+        <div class="avatarvisual fixit">
 
           <iron-selector id="editselected" selected="{{itemselected}}" attr-for-selected="name">
                 
@@ -534,19 +726,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
 
 
-<!--         <template is="dom-if" if="{{itemtoColor}}">
 
-          <div id="colorselector" class="colorselector">
-          </div>
+        <!-- FIXED PEUP // parts -->
 
-        </template>
- -->
-
-
-        <!-- FIXED PEUP -->
-        <div on-click="editListener" class="avatar">
-
-          <div class="snit fixit persontotal">
+          <div class="snit fixit avatarparts">
             <labs002-avatar-snitpages 
               selected="{{avatarSnit}}" 
               color="{{avatarSnitColor}}" 
@@ -555,7 +738,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-snitpages>
           </div>
      
-          <div class="glasses fixit persontotal">
+          <div class="glasses fixit avatarparts">
             <labs002-avatar-glassespages 
               selected="{{avatarGlasses}}" 
               color="{{avatarGlassesColor}}" 
@@ -564,7 +747,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-glassespages>
           </div>
 
-          <div class="face fixit persontotal">
+          <div class="face fixit avatarparts">
             <labs002-avatar-facepages 
               selected="{{avatarFace}}" 
               color="{{avatarFaceColor}}" 
@@ -573,7 +756,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-facepages>
           </div>
 
-          <div class="beard fixit persontotal">
+          <div class="beard fixit avatarparts">
             <labs002-avatar-beardpages 
               selected="{{avatarBeard}}" 
               color="{{avatarBeardColor}}" 
@@ -582,7 +765,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-beardpages>
           </div>
 
-          <div class="head fixit persontotal">
+          <div class="head fixit avatarparts">
             <labs002-avatar-headpages 
               selected="{{avatarHead}}" 
               color="{{avatarHeardColor}}" 
@@ -591,7 +774,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-headpages>
           </div>
 
-          <div class="top fixit persontotal">
+          <div class="top fixit avatarparts">
             <labs002-avatar-toppages 
               selected="{{avatarTop}}" 
               color="{{avatarTopColor}}" 
@@ -600,7 +783,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-toppages>
           </div>
 
-          <div class="bottom fixit persontotal">
+          <div class="bottom fixit avatarparts">
             <labs002-avatar-bottompages 
               selected="{{avatarBottom}}" 
               color="{{avatarBottomColor}}" 
@@ -609,7 +792,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-bottompages>
           </div>
 
-          <div class="shoes fixit persontotal">
+          <div class="shoes fixit avatarparts">
             <labs002-avatar-shoespages 
               selected="{{avatarShoes}}" 
               color="{{avatarShoesColor}}" 
@@ -618,7 +801,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-shoespages>
           </div>
 
-          <div class="body fixit persontotal">
+          <div class="body fixit avatarparts">
             <labs002-avatar-bodypages 
               selected="{{avatarBody}}" 
               color="{{avatarBodyColor}}" 
@@ -627,10 +810,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </labs002-avatar-bodypages>
           </div>
 
-          <div class="persontotal"></div>
+          <div class="avatarparts"></div>
       
         </div>
-
       </div>
     </div>
   </neon-animatable>
@@ -687,7 +869,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value: false
       },
 
-      zoomitemsvisible: {
+      avatarbtnsvisible: {
         type: Boolean,
         value: false
       },
@@ -798,12 +980,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
 
-      toggleZoomitems: function(){
+      toggleAvatarbtns: function(){
 
-        console.log("Visible of the zoomitems?", this.zoomitemsvisible);
-        this.zoomitemsvisible =! this.zoomitemsvisible;
+        console.log("Visible of the avatarbtns?", this.avatarbtnsvisible);
+        this.avatarbtnsvisible =! this.avatarbtnsvisible;
 
-          if (this.zoomitemsvisible) {
+          if (this.avatarbtnsvisible) {
             this.customStyle['--zoom-items-visible'] = 'visible';
           } else {
             this.customStyle['--zoom-items-visible'] = 'hidden';
@@ -850,9 +1032,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _NextSnit: function(){
 
                   // console.log('TETTE');
+        this.SnitEntry = 'slide-from-right-animation';
+        this.SnitExit = 'slide-left-animation';
 
           this.avatarSnit++;
           this.config.snit[0] = this.avatarSnit;
+
+
+
+
 
           //console.log(this.config[1].avatar[0].avatarSnit[0]);
         },
@@ -992,6 +1180,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _NextBody: function(){
           this.avatarBody++;
+
+
           //console.log(this.avatarBody);
           this.config[1].avatar[8].avatarBody[0] = this.avatarBody;
           //console.log(this.config[1].avatar[8].avatarBody[0]);

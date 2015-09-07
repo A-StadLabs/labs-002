@@ -31,7 +31,6 @@
       height: 100%;
       width: 100%;
 
-      @apply(--layout-vertical);
 
     }
 
@@ -107,7 +106,7 @@
 
     <template is="dom-repeat" items="{{objectsdata_new}}">
       <div class="vertical layout center-center">
-        <p>Hallo <span>{{item.array.objectname}}</span></p>
+<!--         <p>Hallo <span>{{item.array.objectname}}</span></p> -->
 
         <labs002-renderer 
           objectname="{{item.array.objectname}}" 
@@ -201,7 +200,7 @@
         this.customStyle['--renderer-width'] = '100%';
         this.customStyle['--renderer-height'] = '100%';  
         this.customStyle['--renderer-position'] = 'absolute';             
-        this.customStyle['--renderer-backgr'] = 'blue';             
+        this.customStyle['--renderer-backgr'] = 'rgba(0,0,0,0.1)';             
 
           } else {
         this.customStyle['--renderer-width'] = '200px';
