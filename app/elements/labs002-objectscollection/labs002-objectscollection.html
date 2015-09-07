@@ -33,38 +33,6 @@
 
     }
 
-/*    .newbackgr {
-      background-color: #a4e5f9;
-      opacity: 0.8;
-      z-index: 9910;
-      height: 100%;
-      width: 100%;
-
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      position: absolute;
-
-    }
-
-
-    .newfrontgr {
-
-      background-color: red;
-      opacity: 0.8;
-      z-index: 99910;
-      height: 100%;
-      width: 100%;
-
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      position: absolute;
-    }*/
-
-
   #toolbar {
     height: 20vh;
     width: 100%;
@@ -85,7 +53,6 @@
     padding: 10px;
   }
 
-
   .mainbtn {
     height: 50px;
     width: 50px;
@@ -105,7 +72,6 @@
     background-color: white;
   }
 
-
   labs002-renderer {
     width: var(--renderer-width);
     height: var(--renderer-height);
@@ -116,57 +82,54 @@
       position: var(--renderer-position);    
   }
 
-
-
-  </style>
-  <template>
-
-
-
-
-
-    <div class="objectscollection">
-
-  <div id="toolbar"> 
-    <template is="dom-if" if="{{loggidin}}">
-      <div class="toolbarbtns color layout horizontal">
+</style>
+<template>
+  <div class="objectscollection">
+    <div id="toolbar"> 
+      <template is="dom-if" if="{{loggidin}}">
+        <div class="toolbarbtns color layout horizontal">
 <!--         <button class="QRbtn" on-click="_toQReader">QRREADER</button> -->
 <!--           <paper-toggle-button checked></paper-toggle-button>
  -->
-        <span class="flex"></span>
-        <div class="mainbtns">
-           <button class="mainbtn" on-click="FireAddData">+</button>
-          <button class="mainbtn QR" on-click="_toQR"><img src="../images/QR.svg"></button>
+          <span class="flex"></span>
+          <div class="mainbtns">
+            <button class="mainbtn" on-click="FireAddData">+</button>
+            <button class="mainbtn QR" on-click="_toQR"><img src="../images/QR.svg"></button>
+          </div>
         </div>
-
-      </div>
-    </template>
-  </div>
+      </template>
+    </div>
 
     <template is="dom-repeat" items="{{objectsdata_new}}">
       <div class="vertical layout center-center">
-      <p>Hallo <span>{{item.array.objectname}}</span></p>
-      <labs002-renderer objectname="{{item.array.objectname}}" objectdata="{{item.array.objectdata}}" objectconfig="{{item.array.objectconfig}}" objectcomponent="{{item.array.objectcomponent}}"  on-scroll="_Scroll"></labs002-renderer>
-      <button on-click="validate" id="{{item.array.name}}">Valideer</button>
-      <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
+        <p>Hallo <span>{{item.array.objectname}}</span></p>
+
+        <labs002-renderer 
+          objectname="{{item.array.objectname}}" 
+          objectdata="{{item.array.objectdata}}" 
+          objectconfig="{{item.array.objectconfig}}" 
+          objectcomponent="{{item.array.objectcomponent}}"  
+          on-scroll="_Scroll">
+        </labs002-renderer>
+
+        <button on-click="validate" id="{{item.array.name}}">Valideer</button>
+        <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
+        
       </div>
     </template>
 
+  </div>
+</template>
 
-
-    </div>
-
-  </template>
 </dom-module>
 <script>
 (function() {
   Polymer({
     is: 'labs002-objectscollection',
 
-
     behaviors: [
         Polymer.NeonAnimatableBehavior
-      ],
+    ],
 
     properties: {
       userid: {
@@ -191,6 +154,7 @@
         value: false,
         notify: true
       },
+
       objectsdata_new: {
         type: Array,
         observer: "_lognewdata",
@@ -203,12 +167,12 @@
 
       var that = this;
       this.addEventListener('update-api', function(e){
-          console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
-          console.log(that.objectsdata.collection[e.detail.datasetkey]);
-          that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
-          that._logData();
-          that.fire('save', { dataset: this.objectsdata });
-        });
+        console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
+        console.log(that.objectsdata.collection[e.detail.datasetkey]);
+        that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
+        that._logData();
+        that.fire('save', { dataset: this.objectsdata });
+      });
 
       this.addEventListener('background-activ', function(){
         this.backgroundactiv = true;
@@ -227,22 +191,19 @@
 
         that.editmode = e.detail.state;
 
-         if (this.editmode) {
-        this.customStyle['--renderer-width'] = '100%';
-        this.customStyle['--renderer-height'] = '100%';  
-        this.customStyle['--renderer-position'] = 'absolute';             
-
-          } else {
-        this.customStyle['--renderer-width'] = '200px';
-        this.customStyle['--renderer-height'] = '360px';
-        this.customStyle['--renderer-position'] = 'none';             
-
-          };
+        if (this.editmode) {
+          this.customStyle['--renderer-width'] = '100%';
+          this.customStyle['--renderer-height'] = '100%';  
+          this.customStyle['--renderer-position'] = 'absolute';             
+        } else {
+          this.customStyle['--renderer-width'] = '200px';
+          this.customStyle['--renderer-height'] = '360px';
+          this.customStyle['--renderer-position'] = 'none';             
+        };
 
         this.updateStyles(); 
 
       });
-
 
     },
 
@@ -255,12 +216,14 @@
         if (p.hasOwnProperty(key)) {
           console.log(key + " -> " + p[key]);
           console.log(p[key].name);
-          this.push('objectsdata_new', { array: {objectname: p[key].name, 
-                                objectconfig: p[key].config,
-                                objectdata: p[key].data,
-                                objectpeers: p[key].peers,
-                                objectcomponent: p[key].component}});
-          console.log('New objectsdata: ',objectsdata_new);
+          this.push('objectsdata_new', { 
+            array: {objectname: p[key].name, 
+            objectconfig: p[key].config,
+            objectdata: p[key].data,
+            objectpeers: p[key].peers,
+            objectcomponent: p[key].component}
+          });
+          console.log('New objectsdata: ', objectsdata_new);
         }
       };
       this.objectsdata_new = objectsdata_new;
@@ -271,12 +234,16 @@
     },
 
     validate: function(e){
-      console.log("validate", e.target.id);
       var i = e.target.id;
       var data = this.objectsdata_new.collection[i].data;
       var config = this.objectsdata_new.collection[i].config;
       var name = this.objectsdata_new.collection[i].name;
-      this.fire('qr-reader', { command: "VERIFY", objectname: name, objectconfig: config, objectdata: JSON.stringify(data) });
+      this.fire('qr-reader', {  
+        command: "VERIFY", 
+        objectname: name, 
+        objectconfig: config, 
+        objectdata: JSON.stringify(data) 
+      });
     },
 
     callback: function(e){
@@ -294,8 +261,6 @@
     _toQReader: function(){
       this.fire('qr-reader');
     },
-
-   
 
     _Scroll:function(){
 
@@ -335,7 +300,6 @@
     FireAddData: function(){
       this.fire('add-data');
     }
-
 
 
   });

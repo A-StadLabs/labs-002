@@ -1,7 +1,7 @@
 <!-- A-StadLabs 2015 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script src="../../scripts/crypto-aes.js"></script>
 <script src="../../bower_components/strophe.js/strophe.js"></script>
 <script src="../../bower_components/strophejs-plugins/muc/strophe.muc.js"></script>
 <script src="../../bower_components/strophe-openfire-websocket/strophe-openfire-websocket.js"></script>
@@ -32,28 +32,40 @@
     height: 100%;
   }
 
-
-
   labs002-objectscollection {
     height: 100%;
     
   }
 
-
-
 </style>
 <template>
 
-    <iron-localstorage id="localstorage" name="labs002-user" value="{{encruserid}}">
+  <iron-localstorage 
+    id="localstorage" 
+    name="labs002-user" 
+    value="{{encruserid}}">
   </iron-localstorage>
 
-   <iron-localstorage id="openfire1" name="labs002-openfire1" 
-       value="{{openfire1}}">
-        </iron-localstorage>
-        <iron-localstorage on-iron-localstorage-load="login"  id="openfire2" name="labs002-openfire2" value="{{openfire2}}">
+  <iron-localstorage 
+    id="openfire1" 
+    name="labs002-openfire1" 
+    value="{{openfire1}}">
+  </iron-localstorage>
+  
+  <iron-localstorage 
+    on-iron-localstorage-load="" 
+    id="openfire2" 
+    name="labs002-openfire2" 
+    value="{{openfire2}}">
+  </iron-localstorage>
 
-  <labs002-localstorageapi id="localapielem" userid="{{userid}}" pincode="{{pin1}}" data="{{localapi}}" encdata="{{localenc}}"></labs002-localstorageapi>
-
+  <labs002-localstorageapi 
+    id="localapielem" 
+    userid="{{userid}}" 
+    pincode="{{pin1}}" 
+    data="{{localapi}}" 
+    encdata="{{localenc}}">
+  </labs002-localstorageapi>
 
   <neon-animated-pages id="pages" selected="{{selected}}"  class="color" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
 
@@ -166,51 +178,6 @@ Op termijn komt hier uw Queueueueeue met todo's -->
           observer: "_selectedChanged"
         }
 
-        // emptyProfile: {
-        //   type: Object,
-        //   value: { collection: [{
-        //     datasetName: "basisprofiel",
-        //     datasetTypes: ["titel", "string", "string"],
-        //     datasetLabels: ["Basisinfo", "voornaam", "naam"],
-        //     datasetWaarden: ["null", "Michael", "Thuy"]
-        //     },
-        //     {
-        //     datasetName: "huis",
-        //     datasetTypes: ["titel", "string", "string"],
-        //     datasetLabels: ["Huis", "straat", "postcode"],
-        //     datasetWaarden: ["null", "Gloriantlaan 39", "2050"]
-        //     }]}
-        //   }
-
-      },
-
-      _addDataset: function(){
-        var config = {};
-        config["snit"] = [2, "red"],
-        config["glasses"] = [1, "red"];
-        config["beard"] = [1, "red"];
-        config["face"] = [0, "red"];
-        config["head"] = [0, "red"];
-        config["top"] = [1, "red"];
-        config["bottom"] = [1, "red"];
-        config["shoes"] = [1, "red"];
-        config["body"] = [0, "var(--primary-lightblue)"];
-
-        var objectdata = {};
-        objectdata["name"] = "";
-        objectdata["firstname"] = "";
-        objectdata["birthdate"] = "";
-        objectdata["birthplace"] = "";
-
-        var object = {};
-        object["name"] = "basisprofiel";
-        object["data"] = objectdata;
-        object["config"] = config;
-        object["peers"] = [];
-        object["component"] = "labs002-avatar";
-
-        this.localapi.collection[object.name] = object;
-        this.$.localapielem.writeData();
       },
 
       /**
@@ -220,6 +187,8 @@ Op termijn komt hier uw Queueueueeue met todo's -->
       ready: function(){
         //Dit staat hier voor de gemakkelijkheid
         this.pin1 = "1234";
+
+        this.openfireconnect = false;
 
         this.loggidin = false;
         this.selected = pageselected;
@@ -250,13 +219,6 @@ Op termijn komt hier uw Queueueueeue met todo's -->
           console.log('Saving whole dataset', e.detail.dataset);
           that.localapi = e.detail.dataset;
           that.$.localapielem.writeData();
-          // En zet de nieuwe versie ook op mijn eigen peer toestellen
-          // for (var i = that.localapi.peers.length - 1; i >= 0; i--) {
-          //   console.log(that.localapi.peers[i]);
-          //   var partner = that.localapi.peers[i];
-          //   console.log('send user object to: ', partner, ' This value: ', that.localenc);
-          //   that.sendMessage(partner, "userupdate",that.localenc, that.encruserid);
-          // };
         });
 
         this.addEventListener('qr-identity', function(e){
@@ -276,9 +238,7 @@ Op termijn komt hier uw Queueueueeue met todo's -->
           that._addDataset();
         });        
 
-
       },
-
 
     senduserobject: function(){
       console.log('send user object to: ', partner, ' This value: ', this.localenc);
@@ -323,21 +283,16 @@ Op termijn komt hier uw Queueueueeue met todo's -->
       var decrypted = CryptoJS.AES.decrypt(this.encruserid, this.pin1);
       var decrtostring = decrypted.toString(CryptoJS.enc.Utf8);
       this.userid = decrtostring;
-      this.login(this.openfire1, this.openfire2);
-      this.loggidin = true;
-    },   
-
-    /** * Device wordt ingelogd op de chatserver */
-    login: function(username, password){
-      var that = this;
-      loginOpenfire(username, password, function(){
-        that.selected = 1;
-        that.$.localapielem.readData();
+      loginOpenfire(this.openfire1, this.openfire2, function(){
+        that.openfireconnect = true;        
       });
-    },
-
-    
+      this.loggidin = true;
+      this.selected = 1;
+      this.$.localapielem.readData();
+    },   
+ 
     // Navigational stuff
+    /** * This one shows the qr code associated with this device */
     _toQR:function(){
       this.selected = 4;
     },
@@ -407,8 +362,37 @@ Op termijn komt hier uw Queueueueeue met todo's -->
 
         this.customStyle['--page-color'] = this.color1;
         this.updateStyles();
-        }
-        });
+        },
+
+    _addDataset: function(){
+        var config = {};
+        config["snit"] = [2, "red"],
+        config["glasses"] = [1, "red"];
+        config["beard"] = [1, "red"];
+        config["face"] = [0, "red"];
+        config["head"] = [0, "red"];
+        config["top"] = [1, "red"];
+        config["bottom"] = [1, "red"];
+        config["shoes"] = [1, "red"];
+        config["body"] = [0, "var(--primary-lightblue)"];
+
+        var objectdata = {};
+        objectdata["name"] = "";
+        objectdata["firstname"] = "";
+        objectdata["birthdate"] = "";
+        objectdata["birthplace"] = "";
+
+        var object = {};
+        object["name"] = "basisprofiel";
+        object["data"] = objectdata;
+        object["config"] = config;
+        object["peers"] = [];
+        object["component"] = "labs002-avatar";
+
+        this.localapi.collection[object.name] = object;
+        this.$.localapielem.writeData();
+      }
+    });
 
 
 })();
