@@ -107,7 +107,6 @@
 
     <template is="dom-repeat" items="{{objectsdata_new}}">
       <div class="vertical layout center-center">
-<<<<<<< Updated upstream
         <p>Hallo <span>{{item.array.objectname}}</span></p>
 
         <labs002-renderer 
@@ -121,12 +120,7 @@
         <button on-click="validate" id="{{item.array.name}}">Valideer</button>
         <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
         
-=======
-<!--       <p>Hallo <span>{{item.array.objectname}}</span></p> -->
-      <labs002-renderer objectname="{{item.array.objectname}}" objectdata="{{item.array.objectdata}}" objectconfig="{{item.array.objectconfig}}" objectcomponent="{{item.array.objectcomponent}}"  on-scroll="_Scroll"></labs002-renderer>
-      <button on-click="validate" id="{{item.array.name}}">Valideer</button>
-      <p>Current: <span>{{item.array.objectpeers.length}}</span></p>
->>>>>>> Stashed changes
+
       </div>
     </template>
 
@@ -203,17 +197,6 @@
 
         that.editmode = e.detail.state;
 
-<<<<<<< Updated upstream
-        if (this.editmode) {
-          this.customStyle['--renderer-width'] = '100%';
-          this.customStyle['--renderer-height'] = '100%';  
-          this.customStyle['--renderer-position'] = 'absolute';             
-        } else {
-          this.customStyle['--renderer-width'] = '200px';
-          this.customStyle['--renderer-height'] = '360px';
-          this.customStyle['--renderer-position'] = 'none';             
-        };
-=======
          if (this.editmode) {
         this.customStyle['--renderer-width'] = '100%';
         this.customStyle['--renderer-height'] = '100%';  
@@ -227,7 +210,6 @@
         this.customStyle['--renderer-backgr'] = 'transparent';             
 
           };
->>>>>>> Stashed changes
 
         this.updateStyles(); 
 
