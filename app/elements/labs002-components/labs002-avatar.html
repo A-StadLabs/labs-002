@@ -630,208 +630,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!-- DIT IS DE VORIGE TESTSECTIE ALS BACKUP -->
-  <!-- sectie 1 // HIER BEGINT DE EDIT-VISUAL-SECTIE -->
-
+  <!-- sectie 2 //   HIER BEGINT DE WAARDEN-SECTIE -->
   <neon-animatable>
     <div class="canvas">
-      <div class="layout horizontal center-center container">
-        <div on-click="editListener" class="avatar">
+      <div class="layout vertical center-center container">
 
+<!--         DO YOUT THING -->
+        <h1>Waarden</h1>
+        <input>
+        <input>
+        <button>Hier dan valideren</button>
+<!--         TOT HIER -->
 
-        <!-- FIXED PEUP // visual edit -->
-        
-        <div class="avatarvisual fixit">
-
-          <iron-selector id="editselected" selected="{{itemselected}}" attr-for-selected="name">
-                
-            <div id="selectsnit" class="selector"  on-click="_editselectedChanged" name="snit">
-              <button on-click="_PrevSnit">
-                <img src="arrow_left.svg">
-              </button>
-              <span class="flex"></span>
-              <button on-click="_NextSnit">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-
-            <div id="selectglasses" class="selector" on-click="_editselectedChanged" name="glasses">
-              <button on-click="_PrevGlasses">
-                <img src="arrow_left.svg">
-              </button>
-              <span class="flex"></span>
-              <button on-click="_NextGlasses">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-
-            <div id="selectbeard" class="selector" on-click="_editselectedChanged" name="beard">
-              <button on-click="_PrevBeard">
-                <img src="arrow_left.svg">
-              </button>
-              <span class="flex"></span>
-              <button on-click="_NextBeard">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-
-            <div id="selecttop" class="selector" on-click="_editselectedChanged" name="top">
-              <button on-click="_PrevTop">
-                <img src="arrow_left.svg">
-              </button>
-              <span class="flex"></span>
-              <button on-click="_NextTop">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-
-            <div id="selectbottom" class="selector" on-click="_editselectedChanged" name="bottom">
-              <button on-click="_PrevBottom">
-                <img src="arrow_left.svg">
-              </button>
-              <span class="flex"></span>
-              <button on-click="_NextBottom">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-
-            <div id="selectshoes" class="selector" on-click="_editselectedChanged" name="shoes">
-              <button on-click="_PrevShoes">
-                <img src="arrow_left.svg">
-              </button>
-              <span class="flex"></span>
-              <button on-click="_NextShoes">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-
-          </iron-selector> 
-
-        </div>
-
-
-
-        <!-- FIXED PEUP // parts -->
-
-          <div class="snit fixit avatarparts">
-            <labs002-avatar-snitpages 
-              selected="{{avatarSnit}}" 
-              color="{{avatarSnitColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-snitpages>
-          </div>
-     
-          <div class="glasses fixit avatarparts">
-            <labs002-avatar-glassespages 
-              selected="{{avatarGlasses}}" 
-              color="{{avatarGlassesColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-glassespages>
-          </div>
-
-          <div class="face fixit avatarparts">
-            <labs002-avatar-facepages 
-              selected="{{avatarFace}}" 
-              color="{{avatarFaceColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-facepages>
-          </div>
-
-          <div class="beard fixit avatarparts">
-            <labs002-avatar-beardpages 
-              selected="{{avatarBeard}}" 
-              color="{{avatarBeardColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-beardpages>
-          </div>
-
-          <div class="head fixit avatarparts">
-            <labs002-avatar-headpages 
-              selected="{{avatarHead}}" 
-              color="{{avatarHeardColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-headpages>
-          </div>
-
-          <div class="top fixit avatarparts">
-            <labs002-avatar-toppages 
-              selected="{{avatarTop}}" 
-              color="{{avatarTopColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-toppages>
-          </div>
-
-          <div class="bottom fixit avatarparts">
-            <labs002-avatar-bottompages 
-              selected="{{avatarBottom}}" 
-              color="{{avatarBottomColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-bottompages>
-          </div>
-
-          <div class="shoes fixit avatarparts">
-            <labs002-avatar-shoespages 
-              selected="{{avatarShoes}}" 
-              color="{{avatarShoesColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-shoespages>
-          </div>
-
-          <div class="body fixit avatarparts">
-            <labs002-avatar-bodypages 
-              selected="{{avatarBody}}" 
-              color="{{avatarBodyColor}}" 
-              entryAnimation="{{entrySnit}}" 
-              exitSnit="{{exitAnimationSnit}}">
-            </labs002-avatar-bodypages>
-          </div>
-
-          <div class="avatarparts"></div>
-      
-        </div>
       </div>
     </div>
   </neon-animatable>
-
-
-
-
-
-  <!-- sectie 2 //   HIER BEGINT DE WAARDEN-SECTIE -->
-<neon-animatable>
-<div class="canvas">
-<div class="layout vertical center-center container">
-<h1>Waarden</h1>
-</div>
-</div>
-
-
-</neon-animatable>
-  <!-- HIER EINDIGT DE WAARDEN-SECTIE -->
 
 
 </neon-animated-pages>
