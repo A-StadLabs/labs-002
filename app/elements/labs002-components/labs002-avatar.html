@@ -637,9 +637,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!--         DO YOUT THING -->
         <h1>Waarden</h1>
-        <input>
-        <input>
-        <button>Hier dan valideren</button>
+
+        <template is="dom-if" if="{{!locked}}">
+        
+        <paper-input-container>
+          <label>Voornaam</label>
+          <input autofocus type="text" is="iron-input" bind-value="{{firstname}}">
+        </paper-input-container>
+
+        <paper-input-container>
+          <label>Naam</label>
+          <input autofocus type="text" is="iron-input" bind-value="{{lastname}}">
+        </paper-input-container>
+
+        <paper-input-container>
+          <label>Geboortedatum</label>
+          <input autofocus type="text" is="iron-input" bind-value="{{birthdate}}" >
+        </paper-input-container>
+
+        <paper-input-container>
+          <label>Geboorteplaats</label>
+          <input autofocus type="text" is="iron-input" bind-value="{{birthplace}}" >
+        </paper-input-container>
+
+        </template>
+
+        <template is="dom-if" if="{{locked}}">
+          <p>Voornaam: <span>{{firstname}}</span></p>
+          <p>{{lastname}}</p>
+          <p>{{birthdate}}</p>
+          <p>{{birthplace}}</p>
+          <button on-click="unlock">unlock</button>
+        </template>
+
+        <button on-click="save">Hier dan valideren</button>
 <!--         TOT HIER -->
 
       </div>
@@ -664,6 +695,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       config: {
           type: Object,
           observer: "_configChanged"
+      },
+
+      data: {
+          type: Object,
+          observer: "_dataChanged"
         },
 
       editmode: {
@@ -703,7 +739,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.entryAnimation = 'slide-from-right-animation';
         this.exitAnimation = 'slide-left-animation';
         console.log('avatar is ready');
-        console.log('avatar conf: ', this.config.beard[0]);
+        //console.log('avatar conf: ', this.config.beard[0]);
 
         this.avatarSnit = this.config.snit[0];
         this.avatarSnitColor = this.config.snit[1];
@@ -734,11 +770,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.avatarBody = this.config.body[0];
         this.avatarBodyColor = this.config.body[1];
 
+        //this.data.locked = false;
+        this.firstname = this.data.firstname;
+        this.lastname = this.data.name;
+        this.birthdate = this.data.birthdate;
+        this.birthplace = this.data.birthplace;
+
+        this.locked = this.data.locked;
+
       },
 
       _showData: function(){
         this.editvalues =! this.editvalues;
         console.log('SHOW DATA TOGGLED', this.editvalues);
+      },
+
+      unlock: function(){
+        this.locked = false;
+      },
+
+      save: function(){
+        this.data.locked = true;
+        this.locked = true;
+        this.data.firstname = this.firstname;
+        this.data.name = this.lastname;
+        this.data.birthplace = this.birthplace;
+        this.data.birthdate = this.birthdate;
+        this.fire('save', {objectname: this.name, objectconfig: this.config, objectdata: this.data });
       },
 
       _test: function(e){
@@ -775,9 +833,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // this.avatarBody = this.config[1].avatar[8].avatarBody[0];
         // this.avatarBodyColor = this.config[1].avatar[8].avatarBody[1];
 
+      },
 
-
-
+      _dataChanged: function(){
+        console.log('Avatar data changed: ', this.data);
       },
 
 

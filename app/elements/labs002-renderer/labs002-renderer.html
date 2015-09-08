@@ -59,7 +59,7 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 <!--   <span>{{objectcomponent}}</span> -->
 
 
-    <labs002-avatar editmode="{{editmode}}" config="{{objectconfig}}" id="avatar"></labs002-avatar>
+    <labs002-avatar editmode="{{editmode}}" object="{{object}}" name="{{objectname}}" config="{{objectconfig}}" data="{{objectdata}}" id="avatar"></labs002-avatar>
 <!--     <button class="editer" on-click="_SwitchModes">edit</button>
  -->
 
@@ -145,46 +145,20 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       //   //that._Scale();
       // });
 
-      this.addEventListener('confirm-changes', function(){
-        console.log('confirm-changes in renderer!!! ');
-      });
+      // var that = this;
+      // this.addEventListener('save-changes', function(e){
+      //   //console.log('confirm-changes in renderer!!! ');
+      //   that._save(e);
+      // });
 
 
 
     },
 
-    _save: function(){
-      var datasetkey = this.datasetkey;
-      // Dus hier moet ik terug door het dataset gaan en de waarden aanpassen.
-      //console.log(dataset);
-      //console.log(dataset.datasetLabels);
-      var dataset = this.dataset;
-      var types = dataset.datasetTypes;
-
-      for (var i = -1 + 1; i <= types.length; i++) {
-        var type = dataset.datasetTypes[i];
-        var item = dataset.datasetLabels[i];
-        console.log(type, item);
-        //console.log()
-        if(type=="string"){
-          var domitem = document.getElementById(item);
-          var domitemvalue = domitem.value;
-          console.log('dom item value: ', domitem, 'value; ', domitemvalue);
-          //console.log('heb ik hier de waarden wel? ', this.$.dataset.datasetLabels[i].value);
-          dataset.datasetWaarden[i] = domitemvalue;
-        };
-        if(type=="object"){
-          dataset.datasetWaarden[i] = this.config;
-        };
-
-        //this.fire('update-api', { dataset: dataset});
-      };
-
-      this.dataset = dataset;
-      
-      this.fire('update-api', { datasetkey: datasetkey, dataset: dataset});
+    _save: function(e){
+      console.log(e);
+      //this.fire('update-api', { datasetkey: objectname, dataset: objectdata});
       //console.log('dataset zou geupdate moeten zijn');
-
     },
 
     _data: function(){
@@ -199,7 +173,7 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
     _dataset: function(){
       // Maak eerst het render plaatske leeg
-      console.log('data changed', this.objectdata);
+      //console.log('data changed', this.objectdata);
       var myNode = document.getElementById("rendercanvas");
       myNode.innerHTML = '';
 
@@ -216,7 +190,9 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
         // e.target.import is the import document.
         var newelem = document.querySelector(webcomponent);
             console.log(newelem, "config: ", this.objectconfig);
+            console.log(newelem, "data: ", this.objectdata);
             newelem.config = this.objectconfig;
+            newelem.data = this.objectdata;
           });
   
       //var types = dataset.datasetTypes;

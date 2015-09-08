@@ -215,9 +215,9 @@ Op termijn komt hier uw Queueueueeue met todo's -->
           that._addDataset();
         });
         
-        this.addEventListener('save', function(e){
-          console.log('Saving whole dataset', e.detail.dataset);
-          that.localapi = e.detail.dataset;
+        this.addEventListener('save', function(){
+          console.log('Saving whole dataset');
+          //that.localapi = e.detail.dataset;
           that.$.localapielem.writeData();
         });
 

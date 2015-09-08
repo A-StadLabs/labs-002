@@ -171,20 +171,20 @@
     ready: function(){
 
       var that = this;
-      this.addEventListener('update-api', function(e){
-        console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
-        console.log(that.objectsdata.collection[e.detail.datasetkey]);
-        that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
-        that._logData();
-        that.fire('save', { dataset: this.objectsdata });
-      });
+      // this.addEventListener('update-api', function(e){
+      //   //console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
+      //   //console.log(that.objectsdata.collection[e.detail.datasetkey]);
+      //   //that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
+      //   that._lognewdata();
+      //   //that.fire('save', { dataset: this.objectsdata });
+      // });
 
       this.addEventListener('background-activ', function(){
         this.backgroundactiv = true;
       });
 
       this.addEventListener('add-getuige', function(e){
-        console.log(e.detail.dataset);
+        //console.log(e.detail.dataset);
         //this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
         //that._toQReader();
         this.fire('qr-reader', { command: "VERIFY", dataset: e.detail.dataset, data: e.detail.data });
@@ -192,7 +192,7 @@
 
 
       this.addEventListener('edit-state', function(e){
-        console.log('Edit state changed ', e.detail.state);
+        //console.log('Edit state changed ', e.detail.state);
 
         that.editmode = e.detail.state;
 
@@ -217,14 +217,14 @@
     },
 
     _objectChanged: function(){
-      console.log('updated: ',this.objectsdata.collection);
+      //console.log('updated: ',this.objectsdata.collection);
       this.objectsdata_new = [];
       var objectsdata_new = this.objectsdata_new;
       var p = this.objectsdata.collection;
       for (var key in p) {
         if (p.hasOwnProperty(key)) {
-          console.log(key + " -> " + p[key]);
-          console.log(p[key].name);
+          //console.log(key + " -> " + p[key]);
+          //console.log(p[key].name);
           this.push('objectsdata_new', { 
             array: {objectname: p[key].name, 
             objectconfig: p[key].config,
@@ -232,14 +232,14 @@
             objectpeers: p[key].peers,
             objectcomponent: p[key].component}
           });
-          console.log('New objectsdata: ', objectsdata_new);
+          //console.log('New objectsdata: ', objectsdata_new);
         }
       };
       this.objectsdata_new = objectsdata_new;
     },
 
     _lognewdata: function(){
-      console.log('New objectsdata changed: ',this.objectsdata_new);
+      //console.log('New objectsdata changed: ',this.objectsdata_new);
     },
 
     validate: function(e){
@@ -256,7 +256,7 @@
     },
 
     callback: function(e){
-      console.log(e);
+      //console.log(e);
     },
 
     _addDataset: function(){
