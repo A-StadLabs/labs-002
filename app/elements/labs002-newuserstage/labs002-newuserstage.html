@@ -202,8 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         notify: true
       },
       selected: {
-        type: Number,
-        observer: "_selection"
+        type: Number
       }
     },
 
@@ -255,21 +254,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
 
-    _selection: function(){
-      if(this.selected==2){
-        var userid = uuid.v1();
-        var pincode = this.pin1;
-        console.log('--- Created UUID ---');
-        console.log('--- userid: ', userid, ' - pincode: ', pincode, ' ---');
-
-        var tmpuserid = CryptoJS.AES.encrypt(userid, pincode);
-        console.log('--- Encrypted UUID ---');
-        this.encruserid = tmpuserid.toString();
-        this.$.localstorage.value = this.encruserid;
-        console.log('--- Stored encrypted UUID in localstorage ---');
-        this.selected++;
-      }
-    },
 
     createUser: function(){
       var userid = uuid.v1();
@@ -282,7 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this.encruserid = tmpuserid.toString();
       this.$.localstorage.value = this.encruserid;
       console.log('--- Stored encrypted UUID in localstorage ---');
-      this.selected=3;
+      this.selected=2;
     },
 
     askBackup: function(e){
