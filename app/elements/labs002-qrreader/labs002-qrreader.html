@@ -93,6 +93,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       document.addEventListener('qrcoderead', function(e){
         that.codevalue = e.detail;
+        console.log("code: ",e.detail);
         that.fire('got-code', { partner: e.detail, command: this.command, objectname: this.objectnaam, objectconfig: this.objectconfig, objectdata: this.objectdata });
         return e.detail;
       });

@@ -36,7 +36,7 @@ See authors.md for a list of all members.
 	*/
 
   	function sendMessage(partner, command, objectname, objectconfig, objectdata){
-  		console.log(partner+'//'+command+'//'+objectname+'//'+objectconfig+'//'+objectdata);
+  		console.log("Preparing to send message: ",partner+'//'+command+'//'+objectname+'//'+objectconfig+'//'+objectdata);
       var message = command+'//'+objectname+'//'+objectconfig+'//'+objectdata;
       var msg = $msg({
         to: partner+'@'+domein
@@ -51,6 +51,7 @@ See authors.md for a list of all members.
   	*/
 
   	function receiveMessage(msg){
+      console.log("Message received: ", msg);
       var that = this;
       var to = msg.getAttribute('to');
       var from = msg.getAttribute('from');
@@ -77,6 +78,7 @@ See authors.md for a list of all members.
    	};
 
    	function processCommand(partner, command, objectname, objectconfig, objectdata){
+      console.log("processCommand: ", partner, command, objectname, objectconfig, objectdata);
    		switch(command){
    			case "SYNC":
    				// Another device wants to sync with this device. This device should say yes or no.
@@ -124,13 +126,14 @@ See authors.md for a list of all members.
       	conn.connect(username, password, function(status){
         	if (status === Strophe.Status.CONNECTED) {
           		// Als em goed is ingelogd doe dit
-          		console.log('--- Connected to OpenFire');
-          		fn();
+          		
+          		//fn();
           		//that.joinRoom(username, password, "astadlabs");
           		conn.addHandler(receiveMessage);
           		conn.send($pres().tree());
           		that.fire('logged-in');
           		that.connected = true;
+              console.log('--- Connected to OpenFire');
           		//that.selected = 1;
 		        // Read data from localstorage
 		        //that.$.localapielem.readData();

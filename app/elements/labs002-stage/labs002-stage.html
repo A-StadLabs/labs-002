@@ -186,7 +186,7 @@ Op termijn komt hier uw Queueueueeue met todo's -->
 
       ready: function(){
         //Dit staat hier voor de gemakkelijkheid
-        this.pin1 = '';
+        this.pin1 = '1234';
 
         this.openfireconnect = false;
 
@@ -256,13 +256,13 @@ Op termijn komt hier uw Queueueueeue met todo's -->
         this.addEventListener("got-code", function(f){
           //Hier doet em shit als em een code terug krijgt. 
           //this.$.objectcoll.callback(e.detail);
-          console.log('Got Code.', f.detail.detail);
-          console.log('partner: ', e.detail.partner);
+          console.log('Got Code.', f.detail.partner);
+          console.log('partner: ', f.detail.partner);
           console.log('Action to perform: ', e.detail.command);
           console.log('Dataset: ', e.detail.objectname);
           console.log('Config: ', e.detail.objectconfig);
           console.log('Data: ', e.detail.objectdata);
-          var partner = f.detail.detail+"@"+domein;
+          var partner = f.detail.partner+"@"+domein;
           var command = e.detail.command;
           var objectname = e.detail.objectname;
           var objectdata = e.detail.objectdata;
