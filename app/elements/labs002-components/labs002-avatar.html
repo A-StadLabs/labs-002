@@ -332,8 +332,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <!-- Hier begint ALLES -->
-<neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
 
+<neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
 
 <!-- sectie 0 //   HIER BEGINT DE  FIXEDPEUP(NIET-EDIT)-SECTIE -->
   <neon-animatable>
@@ -760,8 +760,63 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.selected = 0;
 
         console.log('avatar is ready');
+        this.editmode = false;
         //console.log('avatar conf: ', this.config.beard[0]);
 
+        
+
+      },
+
+      created: function() {
+    console.log(this.localName + '#' + this.id + ' was created');
+  },
+
+  attached: function() {
+    this.async(function() {
+      console.log(this.localName + '#' + this.id + ' was attached');
+      //this.selected = 1;
+      this._configChanged();
+      this._dataChanged();
+   });
+  },
+
+  detached: function() {
+    this.async(function() {
+      console.log(this.localName + '#' + this.id + ' was detached');
+   });
+  },
+
+  attributeChanged: function(name, type) {
+    console.log(this.localName + '#' + this.id + ' attribute ' + name +
+      ' was changed to ' + this.getAttribute(name));
+  },
+
+      _showData: function(){
+        this.editvalues =! this.editvalues;
+        console.log('SHOW DATA TOGGLED', this.editvalues);
+      },
+
+      unlock: function(){
+        this.locked = false;
+      },
+
+      save: function(){
+        this.data.locked = true;
+        this.locked = true;
+        this.data.firstname = this.firstname;
+        this.data.name = this.lastname;
+        this.data.birthplace = this.birthplace;
+        this.data.birthdate = this.birthdate;
+        this.fire('save', {objectname: this.name, objectconfig: this.config, objectdata: this.data });
+      },
+
+      _test: function(e){
+        console.log('hallo ',e);
+        this.config = e;
+      },
+
+      _configChanged: function(){
+        console.log('avatar conf changed: ', this.config);
         this.avatarSnit = this.config.snit[0];
         this.avatarSnitColor = this.config.snit[1];
 
@@ -792,41 +847,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.avatarBodyColor = this.config.body[1];
 
         //this.data.locked = false;
-        this.firstname = this.data.firstname;
-        this.lastname = this.data.name;
-        this.birthdate = this.data.birthdate;
-        this.birthplace = this.data.birthplace;
-
-        this.locked = this.data.locked;
-
-      },
-
-      _showData: function(){
-        this.editvalues =! this.editvalues;
-        console.log('SHOW DATA TOGGLED', this.editvalues);
-      },
-
-      unlock: function(){
-        this.locked = false;
-      },
-
-      save: function(){
-        this.data.locked = true;
-        this.locked = true;
-        this.data.firstname = this.firstname;
-        this.data.name = this.lastname;
-        this.data.birthplace = this.birthplace;
-        this.data.birthdate = this.birthdate;
-        this.fire('save', {objectname: this.name, objectconfig: this.config, objectdata: this.data });
-      },
-
-      _test: function(e){
-        console.log('hallo ',e);
-        this.config = e;
-      },
-
-      _configChanged: function(){
-        console.log('avatar conf changed: ', this.config);
+        
         // this.avatarSnit = this.config[snit][0];
         // this.avatarSnitColor = this.config.snit[1];
 
@@ -858,6 +879,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _dataChanged: function(){
         console.log('Avatar data changed: ', this.data);
+        this.firstname = this.data.firstname;
+        this.lastname = this.data.name;
+        this.birthdate = this.data.birthdate;
+        this.birthplace = this.data.birthplace;
+
+        this.locked = this.data.locked;
       },
 
 

@@ -37,8 +37,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
     #rendercanvas {
-      visibility: hidden;
-      height: 0px;
+      visibility: show;
+      height: 100%;
     }
     button {
       visibility: show;
@@ -46,8 +46,7 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
     }
 
     .editer {
-            visibility: visible;
-
+      visibility: visible;
       height: 50px;
     }
 
@@ -55,19 +54,8 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
   </style>
   <template> 
-
-<!--   <span>{{objectcomponent}}</span> -->
-
-
-    <labs002-avatar editmode="{{editmode}}" object="{{object}}" name="{{objectname}}" config="{{objectconfig}}" data="{{objectdata}}" id="avatar"></labs002-avatar>
-<!--     <button class="editer" on-click="_SwitchModes">edit</button>
- -->
-
-        <div id="rendercanvas"></div>
-<!--         <button on-click="_save">Save</button>
- -->
-
-    </template>
+    <div id="rendercanvas"></div>
+  </template>
 </dom-module>
 <script>
 (function() {
@@ -187,13 +175,18 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       // De gepaste webcomponent inladen
 
       this.importHref("../elements/labs002-components/"+webcomponent+".html", function(e) {
+        var rendercanvas = this.$.rendercanvas;
+        var newelem = document.createElement(webcomponent);
+        //var newelem = document.querySelector("labs002-avatar");
         // e.target.import is the import document.
-        var newelem = document.querySelector(webcomponent);
-            console.log(newelem, "config: ", this.objectconfig);
-            console.log(newelem, "data: ", this.objectdata);
-            newelem.config = this.objectconfig;
-            newelem.data = this.objectdata;
-          });
+        console.log(newelem, "config: ", this.objectconfig);
+        console.log(newelem, "data: ", this.objectdata);
+        newelem.config = this.objectconfig;
+        newelem.data = this.objectdata;
+        newelem.id = this.objectname;
+        rendercanvas.appendChild(newelem);
+      });
+        
   
       //var types = dataset.datasetTypes;
 
