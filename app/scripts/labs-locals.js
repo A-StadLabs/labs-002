@@ -65,16 +65,51 @@ See authors.md for a list of all members.
 
         var commandarray = bodymsg.split("//");
 
-        var partner = commandarray[0];
-        var command = commandarray[1];
-        var objectname = commandarray[2];
-        var objectconfig = commandarray[3];
-        var objectdata = commandarray[4];
+        var partner = from;
+        var command = commandarray[0];
+        var objectname = commandarray[1];
+        var objectconfig = commandarray[2];
+        var objectdata = commandarray[3];
 
-        processCommand(partner, command, objectname, objectconfig, objectdata);
-    
+        //processCommand(partner, command, objectname, objectconfig, objectdata);
+        console.log("processCommand: ", partner, command, objectname, objectconfig, objectdata);
+        switch(command){
+          case "SYNC":
+            // Another device wants to sync with this device. This device should say yes or no.
+            console.log("Een ander toestel wil al jouw gegevens synchroniseren. Is dat ok?");
+          break;
+          case "USERUPDATE":
+            // I am a sync/peer for this user so I keep myself up to date.
+            // Overwrite the local userobject with the one received.
+            console.log("Volledige data wordt gesynct.");
+            app.localenc = objectdata;
+            app.localapi.lastupdate = Date.now();
+            window.location = "/";
+          break;
+          case "VERIFY":
+            // Another user wants a dataset verified by this user
+            console.log("Iemand wil een dataset laten valideren.");
+            //app.openDialog("Wil je deze dataset van Kristien valideren?");
+          break;
+          case "VALIDATE":
+            // Validate the dataset on this device by adding the sender as a peer
+            console.log("Er komt een nieuwe getuige bij.");
+            //app.localapi.collection[objectname].peers.push(partner);
+            //app.localapi.lastupdate = Date.now();
+          break;
+          case "DATAUPDATE":
+            // The incoming dataset has been updated. This device should update the objectconfig and check wether the objectdata has been changed. When changed, the the verification should be cancelled.
+            //app.localapi.collection[objectname].peers[partner] = objectconfig;
+            console.log("Een van jouw mignons heeft een dataset veranderd.");
+            //if(app.localapi.collection[objectname].data === objectdata);
+
+            //app.localapi.lastupdate = Date.now();
+          break;
+        };
       };
+      
       return true;
+      
    	};
 
    	function processCommand(partner, command, objectname, objectconfig, objectdata){
