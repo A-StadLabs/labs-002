@@ -36,11 +36,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       height: 100%;
     }
 
-        .canvas {
+    .canvas {
       background-color: red;
       width: 100%;
       height: 100%;
-      z-index: 99999;
     }
 
 
@@ -124,24 +123,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-localstorage>
 
 
-      <neon-animated-pages id="pages" selected="[[selected]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}" class="color">
-
-
-
-<!--       <div class="canvas color">
-
-      <div class="introchoice  layout vertical center-center" on-click="naarPin1">
-        <h2>Ik ben nieuw</h2>
-      </div>
-      <hr>
-      <div class="introchoice  layout vertical center-center" on-click="naarActivatie">
-        <h2>Ik heb al een toestel geactiveerd</h2>
-      </div>
-
-      </div> -->
-
+      <neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}" class="color">
       
-
 
       <!-- Neon 0 -->
       <dp-pin on-yes="toggleDrawer" on-pin-entered="naarPin2" pin="{{pin1}}" titel="Kies een pincode." error="{{error}}" extrabtn="Ik heb al een toestel geactiveerd" on-naar-activ="naarActivatie"></dp-pin>
@@ -150,21 +133,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <dp-pin on-yes="toggleDrawer" on-pin-entered="naarPinCheck" pin="{{pin2}}" titel="Herhaal de pincode." error="{{error}}">
         </dp-pin>
 
-      <!-- Neon 2 -->
+
+      <!-- Neon 3 -->
       <neon-animatable>
+        <div class="canvas">
+        <h2>Joooo geregistereerd</h2>
+        <a href="/">Ga verder</a>
+      </div>
+      </neon-animatable>
+
+      <!-- Neon 2 -->
+<!--       <neon-animatable>
       <div class="canvas layout vertical center-center color">
         <h2>User wordt aangemaakt</h2>
         <labs002-registeruser id="registeruser" on-user-created="_openfireUsercreated"></labs002-registeruser>
       </div>
       </neon-animatable>
+ -->
 
-      <!-- Neon 3 -->
-      <neon-animatable>
-        <div class="canvas layout vertical center-center color">
-        <h2>Joooo geregistereerd</h2>
-        <a href="/">Ga verder</a>
-      </div>
-      </neon-animatable>
 
       <!-- Neon 4 -->
       <neon-animatable>
@@ -293,6 +279,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     /** * User wordt ingelogd op de chatserver */
     login: function(){
       loginOpenfire(this.openfire1, this.openfire2);
+    },
+
+
+    logit: function(){
+      console.log('heydihoooo');
     }
 
   });
