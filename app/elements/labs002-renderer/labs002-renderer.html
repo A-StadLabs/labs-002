@@ -30,6 +30,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 100%;
       }
 
+    neon-animated-pages {
+      height: 100%;
+    }
+
 
 
 
@@ -85,31 +89,38 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
   </style>
   <template> 
 
-  PAGES selected=""
-      animatable 1
+<neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
+  <neon-animatable>
+
         <div id="rendercanvas">
-          <!-- HIER WORDT AVATAR GERENDERD -->
         </div>
 
+        <div class="renderbtns layout vertical">
 
-      animatable 2
+          <button on-click="edit">
+            <img src="visualbtn.svg">
+          </button>
+
+          <button on-click="validate">
+           <img src="waardenbtn.svg">
+          </button>
+
+        </div> 
+
+    </neon-animatable>
+
+
+  <neon-animatable>
 
         <getuigenlijst>
           met hier een + knop
           en een lijst met bestaande peers
         </getuigenlijst>
+  </neon-animatable>
+  </neon-animated-pages>
 
-  EINDE PAGES
 
 
-        <div class="renderbtns layout vertical">
-          <button on-click="edit">
-                <img src="visualbtn.svg">
-          </button>
-          <button on-click="validate">
-                <img src="waardenbtn.svg">
-          </button>
-        </div>
 
 
     <!-- en hier dan de validatie scherm -->
@@ -185,6 +196,7 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
     ready: function(){
       console.log(this.objectdata);
+      this.selected = 0;
       // var that = this;
       // this.addEventListener('zoom-state', function(e){
       //   console.log('Zoom state changed ', e.detail.state);
