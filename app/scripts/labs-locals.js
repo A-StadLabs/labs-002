@@ -26,14 +26,14 @@ See authors.md for a list of all members.
     });
 
 
-	/**
-	* Sending of messages
-	* to: the device address
-	*	command: as a string. SYNC / SHARE / USERUPDATE / VERIFY / VALIDATE / DATAUPDATE
-	*	objectname: as a string. (the object's key)
-	* objectconfig: the "meta" data or configuration (not encrypted)
-	*	objectdata: the encrypted data object that's verified
-	*/
+  	/**
+  	* Sending of messages
+  	* to: the device address
+  	*	command: as a string. SYNC / SHARE / USERUPDATE / VERIFY / VALIDATE / DATAUPDATE
+  	*	objectname: as a string. (the object's key)
+  	* objectconfig: the "meta" data or configuration (not encrypted)
+  	*	objectdata: the encrypted data object that's verified
+  	*/
 
   	function sendMessage(partner, command, objectname, objectconfig, objectdata){
   		console.log("Preparing to send message: ",partner+'//'+command+'//'+objectname+'//'+objectconfig+'//'+objectdata);
