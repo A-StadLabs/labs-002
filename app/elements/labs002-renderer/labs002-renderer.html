@@ -161,11 +161,11 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       }
      
 
-      // editmode: {
-      //   type: Boolean,
-      //   value: false,
-      //   observer: "_Scale"
-      // },
+      editmode: {
+        type: Boolean,
+        value: false,
+        observer: "editmodetoggle"
+      },
 
 
 
@@ -236,18 +236,11 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       var myNode = document.getElementById("rendercanvas");
       myNode.innerHTML = '';
 
-      var dataset = this.dataset;
-      //console.log(dataset);
-      //console.log(dataset.datasetLabels);
-      var webcomponent = this.objectcomponent;
-
-      console.log('Webcomponent: ',webcomponent);
-
       // De gepaste webcomponent inladen
 
       this.importHref("../elements/labs002-components/"+webcomponent+".html", function(e) {
         var rendercanvas = this.$.rendercanvas;
-        var newelem = document.createElement(webcomponent);
+        var newelem = document.createElement(this.objectcomponent);
         //var newelem = document.querySelector("labs002-avatar");
         // e.target.import is the import document.
         console.log(newelem, "config: ", this.objectconfig);
@@ -263,11 +256,23 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       this.selected = 1;
     },
 
-    edit: function(){},
+    toObject: function(){
+      this.selected = 0;
+    },
+
+    edit: function(){
+      this.toObject();
+      this.editmode = !this.editmode;
+    },
 
     validate: function(){
       console.log("ask for validation");
       this.fire('add-getuige', {objectname: this.objectname, objectconfig: this.objectconfig, objectdata: this.objectdata });
+    },
+
+    editmodetoggle: function(){
+      new elem = document.querySelector(this.objectcomponent);
+      elem.opened = true;
     }
 
 

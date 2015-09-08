@@ -717,6 +717,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value: '',
         notify: true,
         observer: "_kleurChanged"        
+      },
+
+      opened: {
+        type: Boolean,
+        value: false,
+        observer: "editListener"
       }
 
 
@@ -881,6 +887,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       editListener: function(){
+
+        // Dit is dus "opened" geworden
 
           console.log("LISTEN editmode!", this.editmode);
 
