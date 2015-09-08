@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     a {
-            font-weight: 400;
+      font-weight: 400;
       -webkit-font-smoothing: antialiased;
       color: white;
       font-size: 12px;
@@ -93,7 +93,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
 
-
   .introchoice {
     text-align: center;
     height: 50%;
@@ -124,7 +123,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-localstorage>
 
 
-      <neon-animated-pages id="pages" selected="[[selected]]" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}" class="color">
+      <neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}" class="color">
 
 
 
@@ -154,16 +153,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <neon-animatable>
       <div class="canvas layout vertical center-center color">
         <h2>User wordt aangemaakt</h2>
-        <labs002-registeruser id="registeruser" on-user-created="_openfireUsercreated"></labs002-registeruser>
       </div>
       </neon-animatable>
 
       <!-- Neon 3 -->
       <neon-animatable>
         <div class="canvas layout vertical center-center color">
-        <h2>Joooo geregistereerd</h2>
-        <a href="/">Ga verder</a>
-      </div>
+          <h2>Joooo geregistereerd</h2>
+          <a href="/">Ga verder</a>
+        </div>
       </neon-animatable>
 
       <!-- Neon 4 -->
@@ -226,7 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     ready: function(){
-      this.selected = 0;
+      this.selected = 3;
       this.entryAnimation = 'slide-from-right-animation';
       this.exitAnimation = 'slide-left-animation';
     },
@@ -281,7 +279,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.encruserid = tmpuserid.toString();
         this.$.localstorage.value = this.encruserid;
         console.log('--- Stored encrypted UUID in localstorage ---');
-        this.selected++;
+        this.selected=3;
       }
     },
 

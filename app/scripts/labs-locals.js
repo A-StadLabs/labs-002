@@ -77,6 +77,8 @@ See authors.md for a list of all members.
           case "SYNC":
             // Another device wants to sync with this device. This device should say yes or no.
             console.log("Een ander toestel wil al jouw gegevens synchroniseren. Is dat ok?");
+            openDialog("Sync", "Een ander toestel wil al jouw gegevens synchroniseren. Is dat ok?");
+            return true;
           break;
           case "USERUPDATE":
             // I am a sync/peer for this user so I keep myself up to date.
@@ -85,17 +87,21 @@ See authors.md for a list of all members.
             app.localenc = objectdata;
             app.localapi.lastupdate = Date.now();
             window.location = "/";
+            return true;
           break;
           case "VERIFY":
             // Another user wants a dataset verified by this user
             console.log("Iemand wil een dataset laten valideren.");
             //app.openDialog("Wil je deze dataset van Kristien valideren?");
+            openDialog("Verify", "Iemand wil een dataset laten valideren.");
+            return true;
           break;
           case "VALIDATE":
             // Validate the dataset on this device by adding the sender as a peer
             console.log("Er komt een nieuwe getuige bij.");
             //app.localapi.collection[objectname].peers.push(partner);
             //app.localapi.lastupdate = Date.now();
+            return true;
           break;
           case "DATAUPDATE":
             // The incoming dataset has been updated. This device should update the objectconfig and check wether the objectdata has been changed. When changed, the the verification should be cancelled.
@@ -104,13 +110,13 @@ See authors.md for a list of all members.
             //if(app.localapi.collection[objectname].data === objectdata);
 
             //app.localapi.lastupdate = Date.now();
+            return true;
           break;
         };
       };
-      
-      return true;
-      
-   	};
+          
+   	return true;
+    };
 
    	function processCommand(partner, command, objectname, objectconfig, objectdata){
       console.log("processCommand: ", partner, command, objectname, objectconfig, objectdata);
