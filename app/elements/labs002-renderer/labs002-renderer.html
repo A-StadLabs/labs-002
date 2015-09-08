@@ -51,15 +51,57 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
     }
 
 
+    /* ALL MATTERS avatarbtns */
+
+
+    .renderbtns {
+      height: 100px;
+      padding-top: 100px;
+      visibility: var(--zoom-items-visible);
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .renderbtns button {
+      outline: 0;
+      background-color: rgba(0,0,0,0);
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      padding: 0px;
+/*      margin: 0px 5px 0px 5px;*/
+    }
+
+    .renderbtns button img {
+      width: 100%;
+      height: 100%;
+    }
+
+
+
+
+
 
   </style>
   <template> 
-    <div id="rendercanvas">
-      <!-- HIER KOMT AVATAR -->
-    </div>
+
+
+        <div id="rendercanvas">
+          <!-- HIER WORDT AVATAR GERENDERD -->
+        </div>
+
+        <div class="renderbtns layout vertical">
+          <button on-click="toVisual">
+                <img src="visualbtn.svg">
+          </button>
+          <button on-click="toWaarden">
+                <img src="waardenbtn.svg">
+          </button>
+        </div>
+
+
     <!-- en hier dan de validatie scherm -->
-    <!-- Button naar edit modus -->
-    <!-- Button naar peer validatie -->
+
   </template>
 </dom-module>
 <script>
@@ -192,95 +234,19 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
         rendercanvas.appendChild(newelem);
       });
         
-  
-      //var types = dataset.datasetTypes;
 
-      // for (var i = -1 + 1; i <= types.length; i++) {
-      //   //console.log(types[i]);
-      //   var rendercanvas = this.$.rendercanvas;
-      //   switch(types[i]){
-      //     case "string":
-      //       // zet een input veld
-      //       //console.log('RENDERER: zet een input veld string', dataset[i]);
-      //       var textinput = document.createElement("input");
-      //       console.log('Is er een value? ',dataset.datasetWaarden[i]);
-      //       textinput.value = dataset.datasetWaarden[i];
-      //       textinput.placeholder = dataset.datasetLabels[i];
-      //       textinput.id = dataset.datasetLabels[i];
-      //       rendercanvas.appendChild(textinput);
-      //       break;
-      //     case "titel":
-      //       //zet een input veld
-      //       //console.log('RENDERER: zet een input veld number', dataset[i]);
-      //       var titel = document.createElement("h1");
-      //       titel.innerHTML = dataset.datasetLabels[i];
-      //       rendercanvas.appendChild(titel);
-      //       break;
-      //     case "object":
-      //       var waarden = dataset.datasetWaarden[i];
-      //       var editmode = this.editmode;
-      //       this.importHref("../elements/labs002-components/"+webcomponent+".html", function(e) {
-      //   // e.target.import is the import document.
-      //   var newelem = document.querySelector(webcomponent);
-      //       console.log(newelem, "config: ", waarden);
-      //       newelem.config = waarden;
-      //   // console.log('import',e);
-      // }, function(e) {
-      //   // console.log('import',e);
-      //   // loading error
-      // });
-            
-      //   }
-      // };
  
     },
 
 
-      // _SwitchModes: function(){
-      //     this.editmode = !this.editmode;
-      //     this.fire('scroll');
+      toVisual: function(){
 
-      // },
+      },
 
-      // _onNeonAnimationFinish: function(){
-      //   console.log('updating height');
-      //   this._heightUpdate();
-      // },
+      toWaarden: function(){
 
-      // _Scale: function(){
+      },
 
-      //     if (this.editmode) {
-      //       this.playAnimation('edit_on');  
-             
-      //     } else {
-      //       this.playAnimation('edit_off');
-      //       // Saven als de edit state off is
-      //       //this._save();
-      //     };
-
-
-      // },
-
-
-
-      // _heightUpdate: function(){
-
-      //     if (this.editmode) {
-      //       this.customStyle['--object-width'] = '220px';
-      //       this.customStyle['--object-height'] = '402px';
-
-      //       this.updateStyles(); 
-             
-      //     } else {
-      //       this.customStyle['--object-width'] = '200px';
-      //       this.customStyle['--object-height'] = '360px';
-
-      //       this.updateStyles();  
-
-      //     };
-
-
-      // }
 
 
 

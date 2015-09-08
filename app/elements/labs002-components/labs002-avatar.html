@@ -59,7 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     .container {
       height: 100%;
-      margin-top: 25%;
+/*      margin-top: 25%;*/
     }
 
     .fixit {
@@ -95,32 +95,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-
-    /* ALL MATTERS avatarbtns */
-
-
-    .avatarbtns {
-      height: 100%;
-      padding-top: 100px;
-      visibility: var(--zoom-items-visible);
-      padding: 0px;
-      margin: 0px;
-    }
-
-    .avatarbtns button {
-      outline: 0;
-      background-color: rgba(0,0,0,0);
-      width: 40px;
-      height: 40px;
-      border-radius: 20px;
-      padding: 0px;
-/*      margin: 0px 5px 0px 5px;*/
-    }
-
-    .avatarbtns button img {
-      width: 100%;
-      height: 100%;
-    }
 
 
 
@@ -429,15 +403,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div class="avatarparts"></div>
       
-        <!-- FIXED PEUP // btns -->
-        <div class="avatarbtns layout vertical">
-          <button on-click="toVisual">
-                <img src="visualbtn.svg">
-          </button>
-          <button on-click="toWaarden">
-                <img src="waardenbtn.svg">
-          </button>
-        </div>
+
 
 
 
@@ -458,7 +424,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <neon-animatable>
     <div class="canvas">
-      <div class="container layout vertical start">
+      <div class="container layout vertical center-center">
 
         <!-- VOLLEDIGE PEUP -->
 
@@ -889,16 +855,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
 
-      toVisual: function(){
-        this.selected = 1;
-        this.editmode = !this.editmode;
-      },
+      // toVisual: function(){
+      //   this.selected = 1;
+      //   this.editmode = !this.editmode;
+      // },
 
-      toWaarden: function(){
-        this.selected = 2;
-        this.editmode = !this.editmode;
-        console.log('Logshit!');
-      },
+      // toWaarden: function(){
+      //   this.selected = 2;
+      //   this.editmode = !this.editmode;
+      //   console.log('Logshit!');
+      // },
 
 
       toggleAvatarbtns: function(){
