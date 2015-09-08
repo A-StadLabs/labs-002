@@ -85,16 +85,28 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
   </style>
   <template> 
 
-
+  PAGES selected=""
+      animatable 1
         <div id="rendercanvas">
           <!-- HIER WORDT AVATAR GERENDERD -->
         </div>
 
+
+      animatable 2
+
+        <getuigenlijst>
+          met hier een + knop
+          en een lijst met bestaande peers
+        </getuigenlijst>
+
+  EINDE PAGES
+
+
         <div class="renderbtns layout vertical">
-          <button on-click="toVisual">
+          <button on-click="edit">
                 <img src="visualbtn.svg">
           </button>
-          <button on-click="toWaarden">
+          <button on-click="validate">
                 <img src="waardenbtn.svg">
           </button>
         </div>
@@ -233,20 +245,21 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
         newelem.id = this.objectname;
         rendercanvas.appendChild(newelem);
       });
-        
-
- 
     },
 
+    toPeerlist: function(){
+      this.selected = 1;
+    },
 
-      toVisual: function(){
+    edit: function(){},
 
-      },
+    validate: function(){
+      console.log("ask for validation");
+      this.fire('add-getuige', {objectname: this.objectname, objectconfig: this.objectconfig, objectdata: this.objectdata });
+    }
 
-      toWaarden: function(){
 
-      },
-
+     
 
 
 

@@ -186,7 +186,7 @@
         //console.log(e.detail.dataset);
         //this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
         //that._toQReader();
-        this.fire('qr-reader', { command: "VERIFY", dataset: e.detail.dataset, data: e.detail.data });
+        this.fire('qr-reader', { command: "VERIFY", objectname: e.detail.objectname, objectconfig: e.detail.objectconfig, objectdata: e.detail.objectdata });
       });
 
 
