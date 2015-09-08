@@ -20,6 +20,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="labs002-avatar-shoespages.html">
 <link rel="import" href="labs002-avatar-bodypages.html">
 
+<link rel="import" href="labs002-colorpicker.html">
+
 <dom-module id="labs002-avatar">
   <style>
     :host {
@@ -46,12 +48,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
 
+    neon-animated-pages {
+      height: 100%;
+    }
 
+    .canvas {
+      height: 100%;
+      width: 100%;
+    }
 
+    .container {
+      height: 100%;
+    }
 
     .fixit {
       position: absolute;
     }
+
 
 
     .avatar {
@@ -297,19 +310,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     }
 */
-  neon-animated-pages {
-    height: 100%;
-  }
-
-  .canvas {
-    height: 100%;
-    width: 100%;
-/*    background-color: yellow;
-*/  }
 
 
-    .container {
+    iron-selector {
       height: 100%;
+    }
+
+    labs002-colorpicker {
+      height: 50px;
+      width: 200px;
     }
 
 
@@ -448,49 +457,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <neon-animatable>
     <div class="canvas">
-      <div class="layout horizontal center-center container">
+      <div class="container layout vertical center-center">
 
         <!-- VOLLEDIGE PEUP -->
 
-        <div class="avatar">
+        <div class="avatar layout horizontal center-center">
 
-        <!-- PEUP // 1e rij knopjes -->
-        <div class="layout vertical visualbtns">
+          <!-- PEUP // 1e rij knopjes -->
+          <div class="layout vertical visualbtns">
+            <iron-selector id="editselected" selected="{{itemtocolor}}" attr-for-selected="name">
 
-            <div id="selectsnit" class="selector"  on-click="_editselectedChanged" name="snit">
-              <button on-click="_PrevSnit">
-                <img src="arrow_left.svg">
-              </button>
-            </div>
-            <div id="selectglasses" class="selector" on-click="_editselectedChanged" name="glasses">
-              <button on-click="_PrevGlasses">
-                <img src="arrow_left.svg">
-              </button>
-            </div>
-            <div id="selectbeard" class="selector" on-click="_editselectedChanged" name="beard">
-              <button on-click="_PrevBeard">
-                <img src="arrow_left.svg">
-              </button>
-            </div>
-            <div id="selecttop" class="selector" on-click="_editselectedChanged" name="top">
-              <button on-click="_PrevTop">
-                <img src="arrow_left.svg">
-              </button>
-            </div>
-            <div id="selectbottom" class="selector" on-click="_editselectedChanged" name="bottom">
-              <button on-click="_PrevBottom">
-                <img src="arrow_left.svg">
-              </button>
-            </div>
-            <div id="selectshoes" class="selector" on-click="_editselectedChanged" name="shoes">
-              <button on-click="_PrevShoes">
-                <img src="arrow_left.svg">
-              </button>
-            </div>
-        </div>
+              <div id="selectsnit" class="selector"  name="snit">
+                <button on-click="_PrevSnit">
+                  <img src="arrow_left.svg">
+                </button>
+              </div>
+              <div id="selectglasses" class="selector" name="glasses">
+                <button on-click="_PrevGlasses">
+                  <img src="arrow_left.svg">
+                </button>
+              </div>
+              <div id="selectbeard" class="selector" name="beard">
+                <button on-click="_PrevBeard">
+                  <img src="arrow_left.svg">
+                </button>
+              </div>
+              <div id="selecttop" class="selector" name="top">
+                <button on-click="_PrevTop">
+                  <img src="arrow_left.svg">
+                </button>
+              </div>
+              <div id="selectbottom" class="selector" name="bottom">
+                <button on-click="_PrevBottom">
+                  <img src="arrow_left.svg">
+                </button>
+              </div>
+              <div id="selectshoes" class="selector" name="shoes">
+                <button on-click="_PrevShoes">
+                  <img src="arrow_left.svg">
+                </button>
+              </div>
+            </iron-selector>
+          </div>
 
 
-        <!-- PEUP // parts -->
+          <!-- PEUP // parts -->
           <div class="snit fixit avatarparts">
             <labs002-avatar-snitpages 
               selected="{{avatarSnit}}" 
@@ -585,44 +596,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div> -->
 
 
-        <!-- PEUP // 2e rij knopjes -->
-        <div class="layout vertical visualbtns">
-            <div id="selectsnit" class="selector"  on-click="_editselectedChanged" name="snit">
-              <button on-click="_NextSnit">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-            <div id="selectglasses" class="selector" on-click="_editselectedChanged" name="glasses">
-              <button on-click="_NextGlasses">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-            <div id="selectbeard" class="selector" on-click="_editselectedChanged" name="beard">
-              <button on-click="_NextBeard">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-            <div id="selecttop" class="selector" on-click="_editselectedChanged" name="glasses">
-              <button on-click="_NextTop">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-            <div id="selectbottom" class="selector" on-click="_editselectedChanged" name="glasses">
-              <button on-click="_NextBottom">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-            <div id="selectshoes" class="selector" on-click="_editselectedChanged" name="glasses">
-              <button on-click="_NextShoes">
-                <img src="arrow_right.svg">
-              </button>
-            </div>
-        </div>
+          <!-- PEUP // 2e rij knopjes -->
+          <div class="layout vertical visualbtns">
+            <iron-selector id="editselected" selected="{{itemtocolor}}" attr-for-selected="name">
+
+              <div id="selectsnit" class="selector"  name="snit">
+                <button on-click="_NextSnit">
+                  <img src="arrow_right.svg">
+                </button>
+              </div>
+              <div id="selectglasses" class="selector" name="glasses">
+                <button on-click="_NextGlasses">
+                  <img src="arrow_right.svg">
+                </button>
+              </div>
+              <div id="selectbeard" class="selector" name="beard">
+                <button on-click="_NextBeard">
+                  <img src="arrow_right.svg">
+                </button>
+              </div>
+              <div id="selecttop" class="selector" name="top">
+                <button on-click="_NextTop">
+                  <img src="arrow_right.svg">
+                </button>
+              </div>
+              <div id="selectbottom" class="selector" name="bottom">
+                <button on-click="_NextBottom">
+                  <img src="arrow_right.svg">
+                </button>
+              </div>
+              <div id="selectshoes" class="selector" name="shoes">
+                <button on-click="_NextShoes">
+                  <img src="arrow_right.svg">
+                </button>
+              </div>
+
+            </iron-selector>            
+          </div>
 
         </div>
+
+        <!-- PEUP // colorpickers (voor item én voor body) -->
+        <template is="dom-if" if="{{itemtocolor}}">
+        <labs002-colorpicker itemtocolor="{{itemtocolor}}" colorselected="{{avatarSnitColor}}"></labs-colorpicker>
+        </template>
+
+        <labs002-colorpicker itemtocolor="body"></labs-colorpicker>
+      
       </div>
-
-    </div>
+    </div>  
 
   </neon-animatable>
 
@@ -723,7 +745,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value: false
       },
 
-      itemtoColor: {
+      itemtocolor: {
         type: String,
         value: '',
         notify: true,
@@ -736,8 +758,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready: function(){
         this.selected = 0;
-        this.entryAnimation = 'slide-from-right-animation';
-        this.exitAnimation = 'slide-left-animation';
+
         console.log('avatar is ready');
         //console.log('avatar conf: ', this.config.beard[0]);
 
@@ -886,14 +907,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
 
-      _editselectedChanged: function(){
-        this.itemtoColor = this.itemselected;
-        console.log(this.itemtoColor);
-      },
+      // _editselectedChanged: function(){
+      //   this.itemtoColor = this.itemselected;
+      //   console.log(this.itemtoColor);
+      // },
       
 
       _kleurChanged: function(){
-        console.log('Dit is dus nu het item dan:' , this.itemtoColor);
+        console.log('Dit is dus nu het item dan:' , this.itemtocolor);
       },
 
 
@@ -903,18 +924,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _NextSnit: function(){
 
-                  // console.log('TETTE');
-        this.SnitEntry = 'slide-from-right-animation';
-        this.SnitExit = 'slide-left-animation';
+        // this.SnitEntry = 'slide-from-right-animation';
+        // this.SnitExit = 'slide-left-animation';
 
-          this.avatarSnit++;
-          this.config.snit[0] = this.avatarSnit;
+        this.avatarSnit++;
+        this.config.snit[0] = this.avatarSnit;
 
-
-
-
-
-          //console.log(this.config[1].avatar[0].avatarSnit[0]);
         },
 
       _PrevSnit: function(){
