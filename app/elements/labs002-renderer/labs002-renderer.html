@@ -86,49 +86,36 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
 
 
-  </style>
-  <template> 
+</style>
+<template> 
 
 <neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
   <neon-animatable>
+    <div id="rendercanvas"></div>
+    <div class="renderbtns layout vertical">
+      <button on-click="edit">
+        <img src="visualbtn.svg">
+      </button>
 
-        <div id="rendercanvas">
-        </div>
+      <button on-click="toPeerlist">
+        <img src="waardenbtn.svg">
+      </button>
 
-        <div class="renderbtns layout vertical">
+    </div> 
 
-          <button on-click="edit">
-            <img src="visualbtn.svg">
-          </button>
-
-          <button on-click="validate">
-           <img src="waardenbtn.svg">
-          </button>
-
-        </div> 
-
-    </neon-animatable>
-
-
-  <neon-animatable>
-
-        <getuigenlijst>
-          met hier een + knop
-          en een lijst met bestaande peers
-        </getuigenlijst>
   </neon-animatable>
-  </neon-animated-pages>
+  <neon-animatable>
+    <labs002-peers peers="{{objectpeers}}"></labs002-peers>
+  </neon-animatable>
+</neon-animated-pages>
 
-
-
-
-
-    <!-- en hier dan de validatie scherm -->
-
-  </template>
+</template>
 </dom-module>
 <script>
 (function() {
+
+  var elem; 
+
   Polymer({
     is: 'labs002-renderer',
 
@@ -158,16 +145,13 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
       objectcomponent: {
         type: String
-      }
-     
+      },
 
       editmode: {
         type: Boolean,
         value: false,
         observer: "editmodetoggle"
       },
-
-
 
       // animationConfig: {
       //   value: function() {
@@ -194,6 +178,14 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       // 'neon-animation-finish': '_onNeonAnimationFinish'
     },
 
+    attached: function() {
+      this.async(function() {
+        console.log(this.localName + '#' + this.id + ' was attached');
+        //this.selected = 1;
+        
+      });
+    },
+
     ready: function(){
       console.log(this.objectdata);
       this.selected = 0;
@@ -204,11 +196,10 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       //   //that._Scale();
       // });
 
-      // var that = this;
-      // this.addEventListener('save-changes', function(e){
-      //   //console.log('confirm-changes in renderer!!! ');
-      //   that._save(e);
-      // });
+      var that = this;
+      this.addEventListener('new-peer', function(){
+        this.validate();
+      });
 
 
 
@@ -238,17 +229,17 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
       // De gepaste webcomponent inladen
 
-      this.importHref("../elements/labs002-components/"+webcomponent+".html", function(e) {
+      this.importHref("../elements/labs002-components/"+this.objectcomponent+".html", function(e) {
         var rendercanvas = this.$.rendercanvas;
-        var newelem = document.createElement(this.objectcomponent);
+        elem = document.createElement(this.objectcomponent);
         //var newelem = document.querySelector("labs002-avatar");
         // e.target.import is the import document.
-        console.log(newelem, "config: ", this.objectconfig);
-        console.log(newelem, "data: ", this.objectdata);
-        newelem.config = this.objectconfig;
-        newelem.data = this.objectdata;
-        newelem.id = this.objectname;
-        rendercanvas.appendChild(newelem);
+        console.log(elem, "config: ", this.objectconfig);
+        console.log(elem, "data: ", this.objectdata);
+        elem.config = this.objectconfig;
+        elem.data = this.objectdata;
+        elem.id = this.objectname;
+        rendercanvas.appendChild(elem);
       });
     },
 
@@ -267,12 +258,11 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 
     validate: function(){
       console.log("ask for validation");
-      this.fire('add-getuige', {objectname: this.objectname, objectconfig: this.objectconfig, objectdata: this.objectdata });
+      this.fire('add-getuige', {objectname: this.objectname, objectconfig: JSON.stringify(this.objectconfig), objectdata: JSON.stringify(this.objectdata) });
     },
 
     editmodetoggle: function(){
-      new elem = document.querySelector(this.objectcomponent);
-      elem.opened = true;
+      console.log(elem);
     }
 
 
