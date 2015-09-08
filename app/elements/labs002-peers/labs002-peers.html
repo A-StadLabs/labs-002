@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
   <template>
     <button on-click="newpeer">+</button>
+    <p>{{peers.length}}</p>
     <tempate is="dom-repeat" items="{{peers}}">
       <h3>Peer<span>{{item.peer}}</span></h3>
     </tempate>
