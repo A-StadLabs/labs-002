@@ -224,7 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     ready: function(){
-      this.selected = 3;
+      this.selected = 0;
       this.entryAnimation = 'slide-from-right-animation';
       this.exitAnimation = 'slide-left-animation';
     },
@@ -256,7 +256,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     naarPinCheck: function(){
       if(this.pin1==this.pin2){
         console.log('Pincodes komen overeen');
-        this.selected = 2;
+        this.createUser();
       } else {
         console.log('Pincodes niet gelijk');
         this.error = "Pins komen niet overeen.";
@@ -281,6 +281,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log('--- Stored encrypted UUID in localstorage ---');
         this.selected=3;
       }
+    },
+
+    createUser: function(){
+      var userid = uuid.v1();
+      var pincode = this.pin1;
+      console.log('--- Created UUID ---');
+      console.log('--- userid: ', userid, ' - pincode: ', pincode, ' ---');
+
+      var tmpuserid = CryptoJS.AES.encrypt(userid, pincode);
+      console.log('--- Encrypted UUID ---');
+      this.encruserid = tmpuserid.toString();
+      this.$.localstorage.value = this.encruserid;
+      console.log('--- Stored encrypted UUID in localstorage ---');
+      this.selected=3;
     },
 
     askBackup: function(e){
