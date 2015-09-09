@@ -1,81 +1,125 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<dom module id="labs002-skeletonobject">
+<dom-module id="labs002-skeletonobject">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
 
-<style>
-	:host {
-    	display: block;
-    	width: 100%;
-    	height: 100%;
-	}
-</style>
 
-<template>
-	<div>Hello from <span>{{objectname}}</span></div>
-	<!-- <input type="text" value="{{objectdata.username}}" > -->
-</template>
+<div>Hello from <span>{{objectname}}</span></div>
+<h1 contenteditable="true">{{username}}</h1>
+	<input type="text" value="{{username}}"/>
+	<button on-click="save">Save</button>
 
-</dom>
+  </template>
+  <script>
+  (function() {
+    Polymer({
+      is: 'labs002-skeletonobject',
 
-<script>
-
-(function() {
-	Polymer({
-		is: 'labs002-skeletonobject',
-
-	    properties: {
-	      objectname: {
-	        type: String
-	      },
-
+      
+      properties: {
+      	objectname: {
+	    	type: String
+	     },
 	      objectconfig: {
 	        type: Object,
 	        notify: true
 	        //observer: "_config"
 	      },
-
 	      objectdata: {
 	        type: Object,
-	        notify: true
+	        notify: true,
+	        observer: "_data"
 	      },
-
 	      objectcomponent: {
 	        type: String
 	      },
-
 	      opened: {
 	        type: Boolean,
 	        value: false
+	      },
+
+	      username: {
+	      	type: String,
+	      	value: "Michael",
+	      	notify: true,
+	      	observer: "_usernameChanged"
 	      }
 
-        },
 
-        ready: function(){
-        	console.log("Hello from SkeletonObject.");
-        }, 
 
-	    created: function() {
-    		console.log(this.localName + '#' + this.id + ' was created');
-  		},
+      },
 
-  		attached: function() {
-    		this.async(function() {
-      			console.log(this.localName + '#' + this.id + ' was attached');
-			});
-  		},
 
-		detached: function() {
-			this.async(function() {
-      			console.log(this.localName + '#' + this.id + ' was detached');
-			});
-		},
+      ready: function(){
+        console.log('skeleton is ready'); 
+      },
 
-		attributeChanged: function(name, type) {
-			console.log(this.localName + '#' + this.id + ' attribute ' + name +
-			' was changed to ' + this.getAttribute(name));
-		}
+      _usernameChanged: function(){
+      	console.log(this.username);
+      },
 
-	});
-});
-</script>
+      _data: function(){
+      	console.log(this.objectdata);
+      	//this.username = this.objectdata.username;
+      },
+
+      save: function(){
+      	console.log('text unput value: ', this.username);
+      	this.objectdata.username = this.username;
+      	this.fire('save');
+      },
+
+    created: function() {
+    	console.log(this.localName + '#' + this.id + ' was created');
+  	},
+
+  attached: function() {
+    this.async(function() {
+      console.log(this.localName + '#' + this.id + ' was attached');
+      //this.selected = 1;
+      //this._configChanged();
+      //this._dataChanged();
+   });
+  },
+
+  detached: function() {
+    this.async(function() {
+      console.log(this.localName + '#' + this.id + ' was detached');
+   });
+  },
+
+  attributeChanged: function(name, type) {
+    console.log(this.localName + '#' + this.id + ' attribute ' + name +
+      ' was changed to ' + this.getAttribute(name));
+  }
+
+
+    });
+  })();
+  </script>
+</dom-module>
+
+
+
+
+
+
+
+
+
+

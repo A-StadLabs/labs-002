@@ -10,19 +10,18 @@ See authors.md for a list of all members.
 	* Bind to Polymer
 	*/
 
+  var server = "ws://www.opantwerpen.be:7070/ws/server";
+  var domein = "opantwerpen.be";
+
 	var stage;
-	var userapp;
+	var app;
 
 	var conn;
-
-	var server = "ws://www.opantwerpen.be:7070/ws/server";
-
-    var domein = "opantwerpen.be";
 
   	window.addEventListener('WebComponentsReady', function() {
       // imports are loaded and elements have been registered
       stage = document.getElementById("pages");
-      userapp = document.querySelector("labs002-stage");
+      app = document.querySelector("labs002-stage");
     });
 
 

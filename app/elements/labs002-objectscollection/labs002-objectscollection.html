@@ -1,37 +1,18 @@
-<!--
-<labs002-objectscollection id="objectcoll" userid="{{userid}}" on-open-camera="_qrreader" objectsdata="{{localapi}}"></labs002-objectscollection>
--->
-
+<!-- Copyright (c) 2015 The Locals Project Authors. All rights reserved.
+See authors.md for a list of all members.
+ -->
+ 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="labs002-objectscollection">
   <style>
     :host {
       display: block;
-      background: linear-gradient(#a4e5f9 55%, white 45%);
-
-      --can-scroll: scroll;
-      z-index: 910;
-      position: absolute;
-
-      overflow: var(--can-scroll);
-
-      height: 100%;
-      width: 100%;
-
-      --renderer-width: 200px;
-      --renderer-height: 360px;
-      --renderer-position: none;
-      --renderer-backgr:transparent;
-
-
     }
 
     .objectscollection {
       height: 100%;
       width: 100%;
-
-
     }
 
   #toolbar {
@@ -74,28 +55,15 @@
   }
 
   labs002-renderer {
-    width: var(--renderer-width);
-    height: var(--renderer-height);
-
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    position: var(--renderer-position);    
-    /*background-color: var(--renderer-backgr);*/
-/*    border: 1px solid red;
-*/  }
+  }
 
 </style>
 <template>
   <div class="objectscollection">
+
     <div id="toolbar"> 
-      <template is="dom-if" if="{{loggidin}}">
+      <template is="dom-if" if="{{loggedin}}">
         <div class="toolbarbtns color layout horizontal">
-<!--         <button class="QRbtn" on-click="_toQReader">QRREADER</button> -->
-<!--           <paper-toggle-button checked></paper-toggle-button>
- -->
           <span class="flex"></span>
           <div class="mainbtns">
             <button class="mainbtn" on-click="FireAddData">+</button>
@@ -106,7 +74,6 @@
     </div>
 
     <template is="dom-repeat" items="{{objectsdata_new}}">
-      <div class="vertical layout center-center">
 
         <labs002-renderer 
           objectname="{{item.array.objectname}}" 
@@ -117,7 +84,6 @@
           on-scroll="_Scroll">
         </labs002-renderer>        
 
-      </div>
     </template>
 
   </div>
@@ -139,27 +105,19 @@
         notify: true
       },
 
+      loggedin: {
+        type: Boolean,
+        observer: "_log"
+      },
+
       objectsdata: {
         type: Object,
         notify: true,
         observer: "_objectChanged"
       },
 
-      canscroll: {
-        type: Boolean,
-        value: true,
-        notify: true
-      },
-
-      backgroundactiv: {
-        type: Boolean,
-        value: false,
-        notify: true
-      },
-
       objectsdata_new: {
         type: Array,
-        observer: "_lognewdata",
         notify: true
       }
 
@@ -168,17 +126,6 @@
     ready: function(){
 
       var that = this;
-      // this.addEventListener('update-api', function(e){
-      //   //console.log('Updating api for dataset ',e.detail.datasetkey, ' with values; ', e.detail.dataset);
-      //   //console.log(that.objectsdata.collection[e.detail.datasetkey]);
-      //   //that.objectsdata.collection[e.detail.datasetkey] = e.detail.dataset;
-      //   that._lognewdata();
-      //   //that.fire('save', { dataset: this.objectsdata });
-      // });
-
-      this.addEventListener('background-activ', function(){
-        this.backgroundactiv = true;
-      });
 
       this.addEventListener('add-getuige', function(e){
         //console.log(e.detail.dataset);
@@ -186,31 +133,10 @@
         //that._toQReader();
         this.fire('qr-reader', { command: "VERIFY", objectname: e.detail.objectname, objectconfig: e.detail.objectconfig, objectdata: e.detail.objectdata });
       });
+    },
 
-
-      this.addEventListener('edit-state', function(e){
-        // console.log('Edit state changed in obscoll !!!!!!!! ', e.detail.state);
-
-        that.editmode = e.detail.state;
-
-         if (this.editmode) {
-        this.customStyle['--renderer-width'] = '100%';
-        this.customStyle['--renderer-height'] = '100%';  
-        this.customStyle['--renderer-position'] = 'absolute';             
-        this.customStyle['--renderer-backgr'] = 'rgba(0,0,0,0.1)';             
-
-          } else {
-        this.customStyle['--renderer-width'] = '200px';
-        this.customStyle['--renderer-height'] = '360px';
-        this.customStyle['--renderer-position'] = 'none';             
-        this.customStyle['--renderer-backgr'] = 'transparent';             
-
-          };
-
-        this.updateStyles(); 
-
-      });
-
+    _log: function(){
+      console.log(this.loggedin);
     },
 
     _objectChanged: function(){
@@ -235,9 +161,7 @@
       this.objectsdata_new = objectsdata_new;
     },
 
-    _lognewdata: function(){
-      //console.log('New objectsdata changed: ',this.objectsdata_new);
-    },
+ 
 
     validate: function(e){
       var i = e.target.id;
@@ -252,14 +176,6 @@
       });
     },
 
-    callback: function(e){
-      //console.log(e);
-    },
-
-    _addDataset: function(){
-      this.fire('add-avatar');
-    },
-
     _toQR: function(){
       this.fire('qr-identity');
     },
@@ -268,45 +184,9 @@
       this.fire('qr-reader');
     },
 
-    _Scroll:function(){
-
-      this.canscroll = !this.canscroll;
-      if (this.canscroll == true) {
-        this.customStyle['--can-scroll'] = 'scroll';
-      } else {
-        this.customStyle['--can-scroll'] = 'hidden';
-      };
-      
-      this.updateStyles(); 
-
-    },
-
-
-    _CancelChanges: function(){
-      this.backgroundactiv = !this.backgroundactiv;
-    },
-
-
-    _ConfirmChanges: function(){
-      this.backgroundactiv = !this.backgroundactiv;
-
-      renderer = document.querySelector("labs002-renderer");
-      avatar = document.querySelector("labs002-avatar");
-
-      renderer._SwitchModes();
-      renderer._save();
-      avatar.ToggleVisual();
-      avatar.zoomListener();
-
-    },
-
-
-
-
     FireAddData: function(){
       this.fire('add-data');
     }
-
 
   });
 })();
