@@ -34,7 +34,6 @@
 
   labs002-objectscollection {
     height: 100%;
-    
   }
 
 </style>
@@ -76,47 +75,35 @@
   <!-- Stage 1: Alle datasets renderen -->
   <labs002-objectscollection id="objectcoll" userid="{{userid}}" on-open-camera="_qrreader" objectsdata="{{localapi}}" class="color" loggidin="{{loggidin}}"></labs002-objectscollection>
 
-  <!-- Stage 2: Voorbeeld van een eerste dataset -->
-  <labs002-renderer dataset="{{emptyProfile}}" on-save="saveDataset"></labs002-renderer>
+  <!-- Stage 2: De geopende state van het object -->
+  <div id="objectplaceholder"></div>
 
-<!-- Stage 3: QR code lezer -->
-<neon-animatable>
-<div class="canvas">
-  <labs002-qrreader></labs002-qrreader>
-</div>
-</neon-animatable>
+  <!-- Stage 3: QR code lezer -->
+  <neon-animatable>
+    <div class="canvas">
+      <labs002-qrreader></labs002-qrreader>
+    </div>
+  </neon-animatable>
 
-<!-- Stage 4: QR code / Identificatie weergeven -->
-<neon-animatable>
-<div class="canvas">
-  <button on-click="_toWhere">back</button>
-  <alabs-qrcode code="{{openfire1}}"></alabs-qrcode>
-</div>
-</neon-animatable>
+  <!-- Stage 4: QR code / Identificatie weergeven -->
+  <neon-animatable>
+    <div class="canvas">
+      <button on-click="_toWhere">back</button>
+      <alabs-qrcode code="{{openfire1}}"></alabs-qrcode>
+    </div>
+  </neon-animatable>
 
-<!-- Stage 5: Bevestig getuige (of iets anders) worden
-Op termijn komt hier uw Queueueueeue met todo's -->
-<neon-animatable>
-<div class="canvas">
-  <h2>{{titel}}</h2>
-  <div>{{tekst}}</div>
-  <button user="{{user}}" on-click="_ConfirmGetuige">JA!</button>
-  <button on-click="_CancelGetuige">NEEN!</button>
-</div>
-</neon-animatable>
+  <!-- Stage 5: Dialog: actie goedkeuren of weigeren. -->
+  <neon-animatable>
+    <div class="canvas">
+      <h2>{{titel}}</h2>
+      <div>{{tekst}}</div>
+      <button user="{{user}}" on-click="_ConfirmGetuige">JA!</button>
+      <button on-click="_CancelGetuige">NEEN!</button>
+    </div>
+  </neon-animatable>
 
 </neon-animated-pages>
-
-<paper-dialog id="dialog" modal>
-  <h2>{{dialogtitle}}</h2>
-  <paper-dialog-scrollable>
-    <span>{{dialogbody}}</span>
-  </paper-dialog-scrollable>
-  <div class="buttons">
-    <paper-button dialog-dismiss>Annuleren</paper-button>
-    <paper-button dialog-confirm on-click="senduserobject">Accepteren</paper-button>
-  </div>
-</paper-dialog>
 
 </template>
 </dom-module>
@@ -124,8 +111,6 @@ Op termijn komt hier uw Queueueueeue met todo's -->
   (function() {
 
     var conn; 
-
-    var pageselected = 0;
 
     var stage;
     var app;
@@ -135,12 +120,6 @@ Op termijn komt hier uw Queueueueeue met todo's -->
     var server = "ws://www.opantwerpen.be:7070/ws/server";
 
     var domein = "opantwerpen.be";
-
-    var openDialog = function(titel, body){
-      app.dialogtitle = titel;
-      app.dialogbody = body;
-      app.$.dialog.open();
-    };
 
     var saveEncuserobject = function(e){
     console.log(e);
@@ -153,20 +132,9 @@ Op termijn komt hier uw Queueueueeue met todo's -->
       app = document.querySelector("labs002-stage");
     });
 
-    var changeStage = function(e, titel, tekst, user){
+    var changeStage = function(e){
       stage.selected = e;
-      //app.log('iets vanuit vanilla naar polymer');
-      app.titel = titel;
-      app.tekst = tekst;
-      app.user = user;
     };
-
-    // var syncwithme = function(e, user){
-    //   stage.selected = 5;
-    //   //app.log('iets vanuit vanilla naar polymer');
-    //   app.getuige = user;
-    // };
-
 
     Polymer({
       is: 'labs002-stage',
@@ -188,31 +156,15 @@ Op termijn komt hier uw Queueueueeue met todo's -->
         //Dit staat hier voor de gemakkelijkheid
         this.pin1 = '1234';
 
-        this.openfireconnect = false;
-
-        this.loggidin = false;
-        this.selected = pageselected;
+        this.selected = 0;
         this.entryAnimation = 'slide-from-right-animation';
         this.exitAnimation = 'slide-left-animation';
+
         var that = this;
         
-        this.addEventListener('send-message', function(e){
-          console.log('event listener om een message te sturen', e);
-          that.sendMessage(e.detail.command, e.detail.towho);
-        });
-        
         this.addEventListener('change-stage', function(e){
           console.log('Changing stage', e.stage);
           that.selected = e.stage;
-        });
-        
-        this.addEventListener('change-stage', function(e){
-          console.log('Changing stage', e.stage);
-          that.selected = e.stage;
-        });
-
-        this.addEventListener('add-avatar', function(){
-          that._addDataset();
         });
         
         this.addEventListener('save', function(){
@@ -228,11 +180,6 @@ Op termijn komt hier uw Queueueueeue met todo's -->
         this.addEventListener('qr-reader', function(e){
           that._qrreader(e);
         });
-
-        this.addEventListener('background-activ', function(){
-          this.customStyle['--page-color'] = 'blue';
-          this.updateStyles();
-        });
  
         this.addEventListener('add-data', function(e){
           that._addDataset();
@@ -240,71 +187,71 @@ Op termijn komt hier uw Queueueueeue met todo's -->
 
       },
 
-    senduserobject: function(){
-      console.log('send user object to: ', partner, ' This value: ', this.localenc);
-      this.localapi.peers.push(this.openfire1+'@'+domein);
-      this.localapi.peers.push(partner);
-      this.$.localapielem.writeData();
-      this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
-      this.$.localapielem.readData();
-    },
+      senduserobject: function(){
+        console.log('send user object to: ', partner, ' This value: ', this.localenc);
+        this.localapi.peers.push(this.openfire1+'@'+domein);
+        this.localapi.peers.push(partner);
+        this.$.localapielem.writeData();
+        this.sendMessage(partner, "heresuserobject",this.localenc, this.encruserid);
+        this.$.localapielem.readData();
+      },
 
-    /** * Dees functie opent de qr reader en wacht tot em iets terug krijgt. */
+      /** * Dees functie opent de qr reader en wacht tot em iets terug krijgt. */
 
-    _qrreader: function(e){
-      this.importHref("../elements/labs002-qrreader/labs002-qrreader.html", function(g) {
-        this.addEventListener("got-code", function(f){
-          //Hier doet em shit als em een code terug krijgt. 
-          //this.$.objectcoll.callback(e.detail);
-          console.log('Got Code.', f.detail.partner);
-          console.log('partner: ', f.detail.partner);
-          console.log('Action to perform: ', e.detail.command);
-          console.log('Dataset: ', e.detail.objectname);
-          console.log('Config: ', e.detail.objectconfig);
-          console.log('Data: ', e.detail.objectdata);
-          var partner = f.detail.partner+"@"+domein;
-          var command = e.detail.command;
-          var objectname = e.detail.objectname;
-          var objectdata = e.detail.objectdata;
-          var objectconfig = e.detail.objectconfig;
-          sendMessage(partner, command, objectname, objectconfig, objectdata);
-        });
-      // e.target.import is the import document.
-      //console.log('import',e);
-    }, function(g) {
-      //console.log('import',e);
-      // loading error
-    });
-      this.selected = 3;
-    },
-
-    /** * Userobject decrypteren met ingegeven pin code */
-    decryptUser: function(){
-      var decrypted = CryptoJS.AES.decrypt(this.encruserid, this.pin1);
-      var decrtostring = decrypted.toString(CryptoJS.enc.Utf8);
-      this.userid = decrtostring;
-      loginOpenfire(this.openfire1, this.openfire2, function(){
-        that.openfireconnect = true;        
+      _qrreader: function(e){
+        this.importHref("../elements/labs002-qrreader/labs002-qrreader.html", function(g) {
+          this.addEventListener("got-code", function(f){
+            //Hier doet em shit als em een code terug krijgt. 
+            //this.$.objectcoll.callback(e.detail);
+            console.log('Got Code.', f.detail.partner);
+            console.log('partner: ', f.detail.partner);
+            console.log('Action to perform: ', e.detail.command);
+            console.log('Dataset: ', e.detail.objectname);
+            console.log('Config: ', e.detail.objectconfig);
+            console.log('Data: ', e.detail.objectdata);
+            var partner = f.detail.partner+"@"+domein;
+            var command = e.detail.command;
+            var objectname = e.detail.objectname;
+            var objectdata = e.detail.objectdata;
+            var objectconfig = e.detail.objectconfig;
+            sendMessage(partner, command, objectname, objectconfig, objectdata);
+          });
+        // e.target.import is the import document.
+        //console.log('import',e);
+      }, function(g) {
+        //console.log('import',e);
+        // loading error
       });
-      this.loggidin = true;
-      this.selected = 1;
-      this.$.localapielem.readData();
-    },   
+        this.selected = 3;
+      },
+
+      /** * Userobject decrypteren met ingegeven pin code */
+      decryptUser: function(){
+        var decrypted = CryptoJS.AES.decrypt(this.encruserid, this.pin1);
+        var decrtostring = decrypted.toString(CryptoJS.enc.Utf8);
+        this.userid = decrtostring;
+        loginOpenfire(this.openfire1, this.openfire2, function(){
+          that.openfireconnect = true;        
+        });
+        this.loggidin = true;
+        this.selected = 1;
+        this.$.localapielem.readData();
+      },   
  
-    // Navigational stuff
-    /** * This one shows the qr code associated with this device */
-    _toQR:function(){
-      this.selected = 4;
-    },
+      // Navigational stuff
+      /** * This one shows the qr code associated with this device */
+      _toQR:function(){
+        changeStage(4);
+      },
 
     _toWhere:function(){
       this.entryAnimation = 'slide-from-left-animation';
       this.exitAnimation = 'slide-right-animation';
-      this.selected = 1;
+      changeStage(1);
     },
 
     _toScanner: function(){
-      this.selected = 3;
+      changeStage(3);
     },
 
     _ConfirmGetuige: function(e) {
