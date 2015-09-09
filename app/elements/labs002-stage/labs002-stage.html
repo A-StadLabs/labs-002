@@ -366,28 +366,17 @@ Op termijn komt hier uw Queueueueeue met todo's -->
 
     _addDataset: function(){
         var config = {};
-        config["snit"] = [2, "red"],
-        config["glasses"] = [1, "red"];
-        config["beard"] = [1, "red"];
-        config["face"] = [0, "red"];
-        config["head"] = [0, "red"];
-        config["top"] = [1, "red"];
-        config["bottom"] = [1, "red"];
-        config["shoes"] = [1, "red"];
-        config["body"] = [0, "var(--primary-lightblue)"];
+        config["colors"] = ["blue", "red"];
 
         var objectdata = {};
-        objectdata["name"] = "";
-        objectdata["firstname"] = "";
-        objectdata["birthdate"] = "";
-        objectdata["birthplace"] = "";
+        objectdata["username"] = "kingflurkel";
 
         var object = {};
-        object["name"] = "basisprofiel";
+        object["name"] = "SkeletonObject";
         object["data"] = objectdata;
         object["config"] = config;
         object["peers"] = [];
-        object["component"] = "labs002-avatar";
+        object["component"] = "labs002-skeletonobject";
 
         this.localapi.collection[object.name] = object;
         this.$.localapielem.writeData();

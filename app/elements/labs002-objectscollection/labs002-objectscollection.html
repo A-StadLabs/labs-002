@@ -83,9 +83,9 @@
     left: 0;
 
     position: var(--renderer-position);    
-    background-color: var(--renderer-backgr);
-    border: 1px solid red;
-  }
+    /*background-color: var(--renderer-backgr);*/
+/*    border: 1px solid red;
+*/  }
 
 </style>
 <template>
@@ -107,7 +107,6 @@
 
     <template is="dom-repeat" items="{{objectsdata_new}}">
       <div class="vertical layout center-center">
-<!--         <p>Hallo <span>{{item.array.objectname}}</span></p> -->
 
         <labs002-renderer 
           objectname="{{item.array.objectname}}" 
@@ -116,10 +115,7 @@
           objectcomponent="{{item.array.objectcomponent}}" 
           objectpeers="{{item.array.objectpeers}}"
           on-scroll="_Scroll">
-        </labs002-renderer>
-
-        <p>P: <span>{{item.array.objectpeers.length}}</span></p>
-        
+        </labs002-renderer>        
 
       </div>
     </template>

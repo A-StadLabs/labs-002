@@ -1,0 +1,81 @@
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom module id="labs002-skeletonobject">
+
+<style>
+	:host {
+    	display: block;
+    	width: 100%;
+    	height: 100%;
+	}
+</style>
+
+<template>
+	<div>Hello from <span>{{objectname}}</span></div>
+	<!-- <input type="text" value="{{objectdata.username}}" > -->
+</template>
+
+</dom>
+
+<script>
+
+(function() {
+	Polymer({
+		is: 'labs002-skeletonobject',
+
+	    properties: {
+	      objectname: {
+	        type: String
+	      },
+
+	      objectconfig: {
+	        type: Object,
+	        notify: true
+	        //observer: "_config"
+	      },
+
+	      objectdata: {
+	        type: Object,
+	        notify: true
+	      },
+
+	      objectcomponent: {
+	        type: String
+	      },
+
+	      opened: {
+	        type: Boolean,
+	        value: false
+	      }
+
+        },
+
+        ready: function(){
+        	console.log("Hello from SkeletonObject.");
+        }, 
+
+	    created: function() {
+    		console.log(this.localName + '#' + this.id + ' was created');
+  		},
+
+  		attached: function() {
+    		this.async(function() {
+      			console.log(this.localName + '#' + this.id + ' was attached');
+			});
+  		},
+
+		detached: function() {
+			this.async(function() {
+      			console.log(this.localName + '#' + this.id + ' was detached');
+			});
+		},
+
+		attributeChanged: function(name, type) {
+			console.log(this.localName + '#' + this.id + ' attribute ' + name +
+			' was changed to ' + this.getAttribute(name));
+		}
+
+	});
+});
+</script>

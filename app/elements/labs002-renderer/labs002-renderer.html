@@ -26,11 +26,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     .container {
         width: 100%;
         height: 100%;
-        background-color: blue;     
+        /*background-color: blue; */    
     }
 
 
-      labs002-avatar {
+      .objectclass {
+        width: 100%;
+        height: 100%;
+      }
+
+      #SkeletonObject {
         width: 100%;
         height: 100%;
       }
@@ -48,6 +53,7 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
     #rendercanvas {
       visibility: show;
       height: 100%;
+      width: 100%;
     }
     button {
       visibility: show;
@@ -104,8 +110,17 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
 <!-- <neon-animated-pages id="pages" selected="{{selected}}" entry-animation="{{entryAnimation}}" exit-animation="{{exitAnimation}}">
   <neon-animatable> -->
     <div id="rendercanvas"></div>
-    <div class="renderbtns layout vertical">
-      <button on-click="edit">
+  <!-- </neon-animatable>
+  <neon-animatable>
+ -->
+  <section>
+    <labs002-peers peers="{{objectpeers}}"></labs002-peers>
+    </section>
+ <!--  </neon-animatable>
+</neon-animated-pages> -->
+
+<div class="renderbtns layout horizontal">
+      <button on-click="open">
         <img src="visualbtn.svg">
       </button>
 
@@ -114,16 +129,6 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
       </button>
 
     </div> 
-
-<!--   </neon-animatable>
-  <neon-animatable> -->
-
-  <section>
-    <labs002-peers peers="{{objectpeers}}"></labs002-peers>
-
-    </section>
-<!--   </neon-animatable>
-</neon-animated-pages> -->
 
 </template>
 </dom-module>
@@ -256,6 +261,9 @@ HIJ STAAT AF, HIER TERUG AANZETTEN: ALLES WEG!!!
         elem.data = this.objectdata;
         elem.id = this.objectname;
         rendercanvas.appendChild(elem);
+      }, function(e) {
+        // console.log('import',e);
+        // loading error
       });
     },
 
