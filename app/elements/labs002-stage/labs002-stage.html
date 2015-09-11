@@ -111,7 +111,7 @@ See authors.md for a list of all members.
   <!-- Stage 6: Plusmenu om objecten toe te voegen. -->
   <neon-animatable>
     <div class="canvas">
-      Hier komt de plusmenu.
+      <labs002-objectpicker userobjects="{{localapi}}"></labs002-objectpicker>
     </div>
   </neon-animatable>
 
@@ -171,6 +171,10 @@ See authors.md for a list of all members.
           console.log('Saving whole dataset');
           //that.localapi = e.detail.dataset;
           that.$.localapielem.writeData();
+        });
+
+        this.addEventListener('object-picker', function(){
+          changeStage(6);
         });
 
         this.addEventListener('qr-identity', function(e){

@@ -189,6 +189,30 @@ See authors.md for a list of all members.
       	});
    	};
 
+    function object2Array(input){
+      var newarray = [];
+      //var newarray = input;
+      var p = input;
+      for (var key in p) {
+        if (p.hasOwnProperty(key)) {
+          console.log(key ," -> " , p[key]);
+          console.log(p[key].name);
+          newarray.push({
+              objectname: p[key].name, 
+              objectconfig: p[key].config,
+              objectdata: p[key].data,
+              objectpeers: p[key].peers,
+              objectcomponent: p[key].component
+           });
+          console.log('New objectsdata: ', newarray);
+        }
+
+      };
+      //this.newarray = newarray;
+      return newarray;
+    };
+     
+
 
 
 // case "addgetuige":

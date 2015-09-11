@@ -1,0 +1,140 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="labs002-objectpicker">
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+      --enabled-disabled: blue;
+    }
+
+    .item {
+      width: 50px;
+      height: 50px;
+      border: 1px solid grey;
+      margin: 5px;
+      background-color: var(--enabled-disabled);
+    }
+
+  </style>
+  <template>
+    <neon-animated-pages selected="0" id="pages">
+
+      <iron-ajax
+         auto
+         log
+         url="https://ophaal.herokuapp.com/adres?street=Aa&postal=2000"
+         handle-as="json"
+         on-response="handleResponse"></iron-ajax>
+
+      <!-- Dit is de grid met objecten -->
+      <div class="layout horizontal wrap">
+        <template is="dom-repeat" items="{{objects.collection}}">
+          <div class="item" id="{{item.objectname}}" index="{{index}}" on-click="selectobject">{{item.objectname}}</div>
+        </template>
+      </div>
+
+      <!-- Hier een preview met condities weergeven? -->
+      <div>
+        <h1>Preview van het object <span>{{previewname}}</span></h1>
+        <p>Een tekstje over wat het is?</p>
+        <p>{{state}}</p>
+        <p>Condities (wa ge moet hebben veur dat dees kan):</p>
+        <template is="dom-repeat" items="{{conditions}}">
+          <p>{{item.objectname}}</p>
+        </template>
+        <div on-click="backtogrid">BACK!</div>
+      </div>
+
+    </neon-animated-pages>
+
+  </template>
+</dom-module>
+<script>
+(function() {
+  Polymer({
+    is: 'labs002-objectpicker',
+
+    properties: {
+
+      userobjects: {
+        type: Object
+      },
+
+      objects: {
+        type: Object,
+        value: { collection: 
+                  
+                    [
+                      {   objectname: "basisprofiel", 
+                          icon: "icon", 
+                          conditions: [{objectname: "SkeletonObject"}],
+                          enabled: false
+                      },
+
+                      {   objectname: "huwelijk", 
+                          icon: "icon", 
+                          conditions: [{objectname: "basisprofiel"}, {objectname: "partner"}],
+                          enabled: false 
+                      },
+                      {   objectname: "partner", 
+                          icon: "icon", 
+                          conditions: [{objectname: "basisprofiel"}],
+                          enabled: false 
+                      }
+                    ]
+                  
+                },
+        notify: true,
+        observer: "checkEnabled"
+      }
+    },
+
+    checkEnabled: function(){
+      var collection = this.objects.collection;
+      for (var i = collection.length - 1; i >= 0; i--) {
+        console.log(collection[i].conditions);
+        var conditions = collection[i].conditions;
+        for (var i = conditions.length - 1; i >= 0; i--) {
+          if(collection[i].objectname===conditions[i].objectname){
+            console.log("we have a match!");
+            collection[i].enabled = true;
+          } else {
+            console.log("OOOOINK NO PASSSARAN EN ZO");
+            collection[i].enabled = false;
+          }
+        };
+      };
+    },
+
+    selectobject: function(e){
+      console.log(e.target.id);
+      this.previewname = e.target.id;
+      console.log(this.objects.collection[e.target.index].conditions);
+      this.conditions = this.objects.collection[e.target.index].conditions;
+      this.$.pages.selected = 1;
+      var ben = e.target.id;
+      console.log(ben);
+      
+      
+    },
+
+    backtogrid: function(){
+      this.$.pages.selected = 0;
+    }    
+
+  });
+})();
+</script>
