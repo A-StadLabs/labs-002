@@ -75,7 +75,8 @@ See authors.md for a list of all members.
   </dp-pin>
 
   <!-- Stage 1: Alle datasets renderen -->
-  <labs002-objectscollection 
+<!--   <button on-click="_addDataset">+</button>
+ -->  <labs002-objectscollection 
     id="objectcoll" 
     userid="{{userid}}" 
     objectsdata="{{localapi}}" 
@@ -187,7 +188,11 @@ See authors.md for a list of all members.
  
         this.addEventListener('add-data', function(e){
           that._addDataset();
-        });        
+        });    
+
+        this.addEventListener('init-data', function(e){
+          that._addDataset();
+        });       
 
       },
 

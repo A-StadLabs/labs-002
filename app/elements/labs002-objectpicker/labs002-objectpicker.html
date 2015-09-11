@@ -9,7 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="labs002-objectpicker">
   <style>
@@ -32,17 +31,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <neon-animated-pages selected="0" id="pages">
 
-      <iron-ajax
-         auto
-         log
-         url="https://ophaal.herokuapp.com/adres?street=Aa&postal=2000"
-         handle-as="json"
-         on-response="handleResponse"></iron-ajax>
-
       <!-- Dit is de grid met objecten -->
       <div class="layout horizontal wrap">
         <template is="dom-repeat" items="{{objects.collection}}">
           <div class="item" id="{{item.objectname}}" index="{{index}}" on-click="selectobject">{{item.objectname}}</div>
+          <p>{{item.enabled}}</p>
         </template>
       </div>
 

@@ -66,9 +66,9 @@
     },
 
     initEmpty: function(){
-      console.log('nothing found. Initializing...');
       var data = { collection: {}, peers: [], lastupdate: Date.now() };
       this.data = data;
+      //this.fire('init-data');
       this.writeData();
       //data written
     },

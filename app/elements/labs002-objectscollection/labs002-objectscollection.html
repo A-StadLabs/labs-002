@@ -133,6 +133,10 @@ See authors.md for a list of all members.
         //that._toQReader();
         this.fire('qr-reader', { command: "VERIFY", objectname: e.detail.objectname, objectconfig: e.detail.objectconfig, objectdata: e.detail.objectdata });
       });
+
+      this.addEventListener('save-it', function(){
+        this.fire('save');
+      });
     },
 
     _log: function(){

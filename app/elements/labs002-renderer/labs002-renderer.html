@@ -188,7 +188,7 @@ See authors.md for a list of all members.
 
     _save: function(e){
       console.log(e);
-      this.fire('update-api', { datasetkey: objectname, dataset: objectdata});
+      this.fire('save-it', { datasetkey: this.objectname, dataset: this.objectdata});
       //console.log('dataset zou geupdate moeten zijn');
     },
 
