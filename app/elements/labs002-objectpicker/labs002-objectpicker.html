@@ -90,25 +90,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     ]
                   
                 },
-        notify: true,
-        observer: "checkEnabled"
+        notify: true
       }
+    },
+
+    attached: function(){
+      this.async(function() {
+        this.checkEnabled();
+      });
     },
 
     checkEnabled: function(){
       var collection = this.objects.collection;
+      var usercollection = this.userobjects.collection;
+      console.log("Objectpicker: ", collection, usercollection);
+      // Hier gaan we door de collectie gaan
+
       for (var i = collection.length - 1; i >= 0; i--) {
-        console.log(collection[i].conditions);
+      
+        // Hier gaan we zien OF je het wel mag toevoegen.
+        console.log("Conditions ",collection[i].conditions);
+
         var conditions = collection[i].conditions;
-        for (var i = conditions.length - 1; i >= 0; i--) {
-          if(collection[i].objectname===conditions[i].objectname){
-            console.log("we have a match!");
-            collection[i].enabled = true;
-          } else {
-            console.log("OOOOINK NO PASSSARAN EN ZO");
-            collection[i].enabled = false;
-          }
+
+        console.log("condigtions: ", conditions);
+
+        for (var j = conditions.length - 1; j >= 0; j--) {
+          console.log("Conditionsssss ",conditions[j]);
         };
+
+        //for (var i = conditions.length - 1; i >= 0; i--) {
+        //     //console.log("Match? ", conditions[i].objectname, " vs ", usercollection[conditions[i].objectname] );
+        //     var condition = conditions[i].objectname;
+
+        //     console.log("TESSSST!!!! ", condition);
+
+        //     // if(usercollection[condition]){
+        //     //   console.log(condition, " bestaat!");
+        //     // };
+
+        //     //console.log("user collectie: ", usercollection["SkeletonObject"]);
+        //     // for (var i = usercollection.length - 1; i >= 0; i--) {
+        //     //   console.log("De user zijn collectie: ", usercollection[i]);
+        //     // };
+        // //   if(collection[i].objectname===usercollection[conditions[i]]){
+        // //     console.log("we have a match!");
+        // //     collection[i].enabled = true;
+        // //   } else {
+        // //     console.log("OOOOINK NO PASSSARAN EN ZO");
+        // //     collection[i].enabled = false;
+        // //   }
+        //  };
+
+        // En hier gaan we zien of dagget al et of niet
+        //};
+        //};
+
       };
     },
 
